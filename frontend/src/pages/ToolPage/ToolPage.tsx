@@ -1,7 +1,11 @@
 import { useParams } from 'react-router-dom'
+import { useEffect } from 'react'
 import { getToolBySlug } from '@/utils/toolsData'
 import AdBanner from '@/components/Ads/AdBanner'
 import AdSidebar from '@/components/Ads/AdSidebar'
+import { useFavorites } from '@/hooks/useFavorites'
+import { useToolHistory } from '@/hooks/useToolHistory'
+import { useNotification } from '@/contexts/NotificationContext'
 import JSONFormatter from '@/components/Tools/JSONFormatter'
 import JSONValidator from '@/components/Tools/JSONValidator'
 import JSONMinify from '@/components/Tools/JSONMinify'
@@ -76,6 +80,29 @@ export default function ToolPage() {
   const { toolSlug } = useParams<{ toolSlug: string }>()
   const tool = toolSlug ? getToolBySlug(toolSlug) : null
   const ToolComponent = toolSlug ? toolComponents[toolSlug] : null
+  const { isFavorite, toggleFavorite } = useFavorites()
+  const { addToHistory } = useToolHistory()
+  const { showSuccess } = useNotification()
+
+  const isToolFavorite = toolSlug ? isFavorite(toolSlug) : false
+
+  // Add tool to history when page loads
+  useEffect(() => {
+    if (tool && toolSlug) {
+      addToHistory(toolSlug, tool.name)
+    }
+  }, [tool, toolSlug, addToHistory])
+
+  const handleToggleFavorite = () => {
+    if (toolSlug) {
+      toggleFavorite(toolSlug)
+      if (isFavorite(toolSlug)) {
+        showSuccess('Removed from favorites')
+      } else {
+        showSuccess('Added to favorites!')
+      }
+    }
+  }
 
   if (!tool || !ToolComponent) {
     return (
@@ -101,13 +128,30 @@ export default function ToolPage() {
         {/* Main Content */}
         <div className="lg:col-span-3">
           {/* Tool Header */}
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              {tool.name}
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              {tool.description}
-            </p>
+          <div className="mb-6 animate-fade-in-up">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                  {tool.name}
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {tool.description}
+                </p>
+              </div>
+              <button
+                onClick={handleToggleFavorite}
+                className={`flex-shrink-0 p-3 rounded-lg border-2 transition-all duration-200 hover:scale-110 ${
+                  isToolFavorite
+                    ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-700 text-yellow-500 hover:shadow-glow'
+                    : 'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-400 hover:border-yellow-300 dark:hover:border-yellow-700 hover:text-yellow-500'
+                }`}
+                title={isToolFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <svg className="w-6 h-6" fill={isToolFavorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           {/* Tool Component */}

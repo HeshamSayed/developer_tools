@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { generateASCIIArt } from '@/services/api'
 import CopyButton from '@/components/Common/CopyButton'
+import { useNotification } from '@/contexts/NotificationContext'
 
 export default function ASCIIArtGenerator() {
+  const { showSuccess } = useNotification()
   const [text, setText] = useState('')
   const [output, setOutput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -23,6 +25,7 @@ export default function ASCIIArtGenerator() {
         if (result.available_fonts && availableFonts.length === 0) {
           setAvailableFonts(result.available_fonts)
         }
+        showSuccess('ASCII art generated successfully!')
       } else {
         setError(result.error || 'Failed to generate ASCII art')
       }

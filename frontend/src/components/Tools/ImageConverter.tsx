@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react'
 import { convertImage } from '@/services/api'
+import { useNotification } from '@/contexts/NotificationContext'
 
 export default function ImageConverter() {
+  const { showSuccess } = useNotification()
   const [inputImageData, setInputImageData] = useState<string>('')
   const [outputImageData, setOutputImageData] = useState<string>('')
   const [loading, setLoading] = useState(false)
@@ -57,6 +59,7 @@ export default function ImageConverter() {
           originalSize: result.original_size,
           convertedSize: result.converted_size
         })
+        showSuccess(`Image successfully converted to ${outputFormat}!`)
       } else {
         setError(result.error || 'Failed to convert image')
       }
@@ -76,6 +79,7 @@ export default function ImageConverter() {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+    showSuccess('Image downloaded successfully!')
   }
 
   const formatBytes = (bytes: number) => {

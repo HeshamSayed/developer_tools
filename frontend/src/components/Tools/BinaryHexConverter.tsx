@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { convertBinaryHex } from '@/services/api'
 import CopyButton from '@/components/Common/CopyButton'
+import { useNotification } from '@/contexts/NotificationContext'
 
 export default function BinaryHexConverter() {
+  const { showSuccess } = useNotification()
   const [input, setInput] = useState('')
   const [result, setResult] = useState<any>(null)
   const [loading, setLoading] = useState(false)
@@ -19,6 +21,7 @@ export default function BinaryHexConverter() {
 
       if (response.success) {
         setResult(response.result)
+        showSuccess('Conversion completed successfully!')
       } else {
         setError(response.error || 'Failed to convert')
       }
