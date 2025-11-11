@@ -1,5 +1,4 @@
 import { Highlight, themes } from 'prism-react-renderer'
-import { useState } from 'react'
 import CopyButton from './CopyButton'
 
 interface CodeBlockProps {
@@ -10,10 +9,8 @@ interface CodeBlockProps {
 }
 
 export default function CodeBlock({ code, language, showLineNumbers = true, title }: CodeBlockProps) {
-  const [isDark, setIsDark] = useState(
-    localStorage.getItem('theme') === 'dark' ||
+  const isDark = localStorage.getItem('theme') === 'dark' ||
     (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)
-  )
 
   return (
     <div className="relative">

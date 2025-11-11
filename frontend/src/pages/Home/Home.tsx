@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { toolCategories, getAllTools } from '@/utils/toolsData'
+import { toolCategories } from '@/utils/toolsData'
 import AdBanner from '@/components/Ads/AdBanner'
 
 export default function Home() {

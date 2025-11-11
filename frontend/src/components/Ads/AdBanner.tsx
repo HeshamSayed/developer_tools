@@ -11,10 +11,9 @@ export default function AdBanner({ position, className = '' }: AdBannerProps) {
   useEffect(() => {
     // Simulate AdSense ad loading with delay
     const timer = setTimeout(() => {
-      if (adRef.current && window.adsbygoogle) {
+      if (adRef.current && (window as any).adsbygoogle) {
         try {
-          // @ts-ignore
-          (window.adsbygoogle = window.adsbygoogle || []).push({})
+          ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
         } catch (e) {
           console.error('AdSense error:', e)
         }

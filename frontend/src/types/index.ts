@@ -22,6 +22,8 @@ export interface ApiResponse<T = any> {
     processing_time_ms?: number
     [key: string]: any
   }
+  // Allow additional properties for various API responses
+  [key: string]: any
 }
 
 export interface AdPlacement {

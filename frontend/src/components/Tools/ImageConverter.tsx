@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { convertImage } from '@/services/api'
 
 export default function ImageConverter() {
-  const [input ImageData, setInputImageData] = useState<string>('')
+  const [inputImageData, setInputImageData] = useState<string>('')
   const [outputImageData, setOutputImageData] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
