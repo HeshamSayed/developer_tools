@@ -7,6 +7,7 @@ Libraries used:
 - Pillow (HPND License) - Image processing
 - pyfiglet (MIT License) - ASCII art generation
 - ssl, socket (Python standard library) - SSL certificate checking
+- cryptography (Apache/BSD License) - Certificate parsing
 """
 
 from rest_framework.views import APIView
@@ -24,6 +25,8 @@ import random
 import ssl
 import socket
 from datetime import datetime
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
 
 
 class CSSFormatterView(APIView):
@@ -523,6 +526,7 @@ class SSLCheckerView(APIView):
                 with socket.create_connection((domain, port), timeout=10) as sock:
                     with context.wrap_socket(sock, server_hostname=domain) as ssock:
                         cert = ssock.getpeercert()
+                        cert_der = ssock.getpeercert(binary_form=True)
                         cipher = ssock.cipher()
                         version = ssock.version()
             except socket.gaierror:
@@ -536,16 +540,28 @@ class SSLCheckerView(APIView):
             except Exception as e:
                 raise ToolException(f'Connection error: {str(e)}')
 
-            # Parse certificate information
+            # Parse certificate using cryptography library for detailed info
+            x509_cert = x509.load_der_x509_certificate(cert_der, default_backend())
+
+            # Parse subject and issuer
             subject = dict(x[0] for x in cert['subject'])
             issuer = dict(x[0] for x in cert['issuer'])
 
+            # Get location info from subject
+            subject_dict = {}
+            for rdn in x509_cert.subject:
+                subject_dict[rdn.oid._name] = rdn.value
+
+            issuer_dict = {}
+            for rdn in x509_cert.issuer:
+                issuer_dict[rdn.oid._name] = rdn.value
+
             # Parse dates
-            not_before = datetime.strptime(cert['notBefore'], '%b %d %H:%M:%S %Y %Z')
-            not_after = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
+            not_before = x509_cert.not_valid_before_utc
+            not_after = x509_cert.not_valid_after_utc
 
             # Calculate days until expiration
-            now = datetime.now()
+            now = datetime.now(not_after.tzinfo)
             days_remaining = (not_after - now).days
 
             # Determine status
@@ -561,9 +577,32 @@ class SSLCheckerView(APIView):
 
             # Get Subject Alternative Names (SANs)
             san_list = []
-            for san_type, san_value in cert.get('subjectAltName', []):
-                if san_type == 'DNS':
-                    san_list.append(san_value)
+            try:
+                san_ext = x509_cert.extensions.get_extension_for_oid(x509.oid.ExtensionOID.SUBJECT_ALTERNATIVE_NAME)
+                san_list = [dns_name.value for dns_name in san_ext.value]
+            except x509.ExtensionNotFound:
+                # Fallback to basic method
+                for san_type, san_value in cert.get('subjectAltName', []):
+                    if san_type == 'DNS':
+                        san_list.append(san_value)
+
+            # Get signature algorithm
+            sig_alg = x509_cert.signature_algorithm_oid._name
+
+            # Format location
+            subject_location_parts = []
+            if subject_dict.get('localityName'):
+                subject_location_parts.append(subject_dict['localityName'])
+            if subject_dict.get('stateOrProvinceName'):
+                subject_location_parts.append(subject_dict['stateOrProvinceName'])
+            if subject_dict.get('countryName'):
+                subject_location_parts.append(subject_dict['countryName'])
+            subject_location = ', '.join(subject_location_parts) if subject_location_parts else 'N/A'
+
+            issuer_location = issuer_dict.get('countryName', 'N/A')
+
+            # Format serial number
+            serial_hex = format(x509_cert.serial_number, 'x')
 
             result = {
                 'domain': domain,
@@ -572,25 +611,27 @@ class SSLCheckerView(APIView):
                 'status_color': status_color,
                 'valid': cert_status == 'valid',
                 'days_remaining': days_remaining,
-                'subject': {
-                    'common_name': subject.get('commonName', 'N/A'),
-                    'organization': subject.get('organizationName', 'N/A'),
-                    'organizational_unit': subject.get('organizationalUnitName', 'N/A'),
-                    'country': subject.get('countryName', 'N/A'),
-                },
-                'issuer': {
-                    'common_name': issuer.get('commonName', 'N/A'),
-                    'organization': issuer.get('organizationName', 'N/A'),
-                    'country': issuer.get('countryName', 'N/A'),
-                },
-                'validity': {
-                    'not_before': not_before.strftime('%Y-%m-%d %H:%M:%S UTC'),
-                    'not_after': not_after.strftime('%Y-%m-%d %H:%M:%S UTC'),
-                    'days_remaining': days_remaining,
-                },
-                'subject_alternative_names': san_list,
-                'serial_number': cert.get('serialNumber', 'N/A'),
-                'version': cert.get('version', 'N/A'),
+                'certificates': [
+                    {
+                        'type': 'server',
+                        'common_name': subject_dict.get('commonName', 'N/A'),
+                        'sans': ', '.join(san_list) if san_list else 'N/A',
+                        'organization': subject_dict.get('organizationName', 'N/A'),
+                        'location': subject_location,
+                        'valid_from': not_before.strftime('%B %d, %Y'),
+                        'valid_to': not_after.strftime('%B %d, %Y'),
+                        'serial_number': serial_hex,
+                        'signature_algorithm': sig_alg,
+                        'issuer': issuer_dict.get('commonName', 'N/A'),
+                    },
+                    {
+                        'type': 'issuer',
+                        'common_name': issuer_dict.get('commonName', 'N/A'),
+                        'organization': issuer_dict.get('organizationName', 'N/A'),
+                        'location': issuer_location,
+                        'issuer': 'Root CA',
+                    }
+                ],
                 'cipher_suite': {
                     'name': cipher[0] if cipher else 'N/A',
                     'protocol': version if version else 'N/A',

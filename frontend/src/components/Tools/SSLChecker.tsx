@@ -163,179 +163,85 @@ export default function SSLChecker() {
             </div>
           </div>
 
-          {/* Certificate Details */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Certificate Details
-            </h4>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Subject */}
-              <div>
-                <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">
-                  Subject
-                </h5>
-                <div className="space-y-2">
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Common Name (CN)</p>
-                    <p className="text-sm text-gray-900 dark:text-gray-100 font-mono">
-                      {result.subject.common_name}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Organization (O)</p>
-                    <p className="text-sm text-gray-900 dark:text-gray-100 font-mono">
-                      {result.subject.organization}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Country (C)</p>
-                    <p className="text-sm text-gray-900 dark:text-gray-100 font-mono">
-                      {result.subject.country}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Issuer */}
-              <div>
-                <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wider">
-                  Issuer
-                </h5>
-                <div className="space-y-2">
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Common Name (CN)</p>
-                    <p className="text-sm text-gray-900 dark:text-gray-100 font-mono">
-                      {result.issuer.common_name}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Organization (O)</p>
-                    <p className="text-sm text-gray-900 dark:text-gray-100 font-mono">
-                      {result.issuer.organization}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Country (C)</p>
-                    <p className="text-sm text-gray-900 dark:text-gray-100 font-mono">
-                      {result.issuer.country}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Validity Period */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              Validity Period
-            </h4>
-
-            <div className="space-y-3">
-              <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Valid From</span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 font-mono">
-                  {result.validity.not_before}
-                </span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                <span className="text-sm text-gray-600 dark:text-gray-400">Valid Until</span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 font-mono">
-                  {result.validity.not_after}
-                </span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-900/20 dark:to-accent-900/20 rounded-lg border border-primary-200 dark:border-primary-800">
-                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">Days Until Expiration</span>
-                <span className={`text-xl font-bold ${
-                  result.days_remaining < 0 ? 'text-danger-600 dark:text-danger-400' :
-                  result.days_remaining < 30 ? 'text-warning-600 dark:text-warning-400' :
-                  'text-success-600 dark:text-success-400'
+          {/* Certificate Chain */}
+          {result.certificates && result.certificates.map((cert: any, index: number) => (
+            <div
+              key={index}
+              className="bg-white dark:bg-gray-800 rounded-lg p-6 border-2 border-gray-200 dark:border-gray-700"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                  cert.type === 'server'
+                    ? 'bg-gradient-to-br from-primary-500 to-accent-500'
+                    : 'bg-gradient-to-br from-success-500 to-primary-500'
                 }`}>
-                  {result.days_remaining} days
-                </span>
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                    {cert.type === 'server' ? 'Server Certificate' : 'Issuer Certificate'}
+                  </h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {cert.type === 'server' ? 'End-entity certificate' : 'Certificate Authority'}
+                  </p>
+                </div>
               </div>
-            </div>
-          </div>
 
-          {/* Additional Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Cipher Suite */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-                <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-                Cipher Suite
-              </h4>
-              <div className="space-y-2">
-                <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Cipher Name</p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100 font-mono break-all">
-                    {result.cipher_suite.name}
-                  </p>
+              <div className="space-y-4 font-mono text-sm">
+                <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Common name:</p>
+                  <p className="text-gray-900 dark:text-gray-100 font-semibold">{cert.common_name}</p>
                 </div>
-                <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Protocol Version</p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100 font-mono">
-                    {result.cipher_suite.protocol}
-                  </p>
-                </div>
-              </div>
-            </div>
 
-            {/* Certificate Info */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-                <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Certificate Info
-              </h4>
-              <div className="space-y-2">
-                <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Serial Number</p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100 font-mono break-all">
-                    {result.serial_number}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Version</p>
-                  <p className="text-sm text-gray-900 dark:text-gray-100 font-mono">
-                    {result.version}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+                {cert.sans && cert.sans !== 'N/A' && (
+                  <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">SANs:</p>
+                    <p className="text-gray-900 dark:text-gray-100 break-all">{cert.sans}</p>
+                  </div>
+                )}
 
-          {/* Subject Alternative Names */}
-          {result.subject_alternative_names && result.subject_alternative_names.length > 0 && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-                <svg className="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Subject Alternative Names (SANs)
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {result.subject_alternative_names.map((san: string, index: number) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 text-sm font-mono rounded-full border border-primary-200 dark:border-primary-800"
-                  >
-                    {san}
-                  </span>
-                ))}
+                <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Organization:</p>
+                  <p className="text-gray-900 dark:text-gray-100">{cert.organization}</p>
+                </div>
+
+                <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Location:</p>
+                  <p className="text-gray-900 dark:text-gray-100">{cert.location}</p>
+                </div>
+
+                {cert.valid_from && cert.valid_to && (
+                  <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Valid from:</p>
+                    <p className="text-gray-900 dark:text-gray-100">
+                      {cert.valid_from} to {cert.valid_to}
+                    </p>
+                  </div>
+                )}
+
+                {cert.serial_number && (
+                  <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Serial Number:</p>
+                    <p className="text-gray-900 dark:text-gray-100 break-all">{cert.serial_number}</p>
+                  </div>
+                )}
+
+                {cert.signature_algorithm && (
+                  <div className="pb-3 border-b border-gray-200 dark:border-gray-700">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Signature Algorithm:</p>
+                    <p className="text-gray-900 dark:text-gray-100">{cert.signature_algorithm}</p>
+                  </div>
+                )}
+
+                <div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Issuer:</p>
+                  <p className="text-gray-900 dark:text-gray-100 font-semibold">{cert.issuer}</p>
+                </div>
               </div>
             </div>
-          )}
+          ))}
         </div>
       )}
     </div>
