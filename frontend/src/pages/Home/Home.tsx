@@ -1,8 +1,21 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { toolCategories } from '@/utils/toolsData'
+import { toolCategories, getAllTools } from '@/utils/toolsData'
 import AdBanner from '@/components/Ads/AdBanner'
 
 export default function Home() {
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filteredCategories = searchQuery
+    ? toolCategories.map(category => ({
+        ...category,
+        tools: category.tools.filter(tool =>
+          tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          tool.description.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      })).filter(category => category.tools.length > 0)
+    : toolCategories
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Top Banner Ad */}
@@ -13,15 +26,41 @@ export default function Home() {
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
           Free Developer Tools
         </h1>
-        <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+        <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-8">
           Powerful, fast, and easy-to-use online tools for developers. Format JSON, encode Base64,
           generate hashes, create passwords, and much more.
         </p>
+
+        {/* Search Bar */}
+        <div className="max-w-2xl mx-auto">
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search tools... (e.g., JSON, Base64, Hash)"
+              className="w-full px-6 py-4 text-lg rounded-full border-2 border-gray-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 dark:bg-gray-800 dark:border-gray-600 dark:text-white pl-14"
+            />
+            <svg
+              className="absolute left-5 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          {searchQuery && (
+            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+              Found {filteredCategories.reduce((sum, cat) => sum + cat.tools.length, 0)} tool(s)
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Tool Categories Grid */}
       <div className="space-y-12">
-        {toolCategories.map((category) => (
+        {filteredCategories.map((category) => (
           <div key={category.slug} className="category-section">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3 mb-2">

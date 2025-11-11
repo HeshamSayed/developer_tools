@@ -76,4 +76,64 @@ export const convertTimestamp = async (
   return response.data
 }
 
+// JWT Tools
+export const decodeJWT = async (token: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/jwt/decode', { token })
+  return response.data
+}
+
+// Text Tools
+export const textDiff = async (text1: string, text2: string, diffType: string = 'unified'): Promise<ApiResponse> => {
+  const response = await api.post('/tools/text/diff', { text1, text2, diff_type: diffType })
+  return response.data
+}
+
+export const regexTest = async (pattern: string, text: string, flags: string[] = []): Promise<ApiResponse> => {
+  const response = await api.post('/tools/text/regex', { pattern, text, flags })
+  return response.data
+}
+
+// Conversion Tools
+export const csvToJSON = async (input: string, delimiter: string = ','): Promise<ApiResponse> => {
+  const response = await api.post('/tools/convert/csv-to-json', { input, delimiter })
+  return response.data
+}
+
+export const jsonToCSV = async (input: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/convert/json-to-csv', { input })
+  return response.data
+}
+
+// Encoding Tools
+export const urlEncode = async (input: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/encode/url', { input })
+  return response.data
+}
+
+export const urlDecode = async (input: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/decode/url', { input })
+  return response.data
+}
+
+export const htmlEncode = async (input: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/encode/html', { input })
+  return response.data
+}
+
+export const htmlDecode = async (input: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/decode/html', { input })
+  return response.data
+}
+
+// Generator Tools
+export const generateUUID = async (version: number = 4, quantity: number = 1): Promise<ApiResponse> => {
+  const response = await api.post('/tools/generate/uuid', { version, quantity })
+  return response.data
+}
+
+export const generateQRCode = async (text: string, size: number = 10, errorCorrection: string = 'M'): Promise<ApiResponse> => {
+  const response = await api.post('/tools/generate/qrcode', { text, size, error_correction: errorCorrection })
+  return response.data
+}
+
 export default api

@@ -11,6 +11,19 @@ import HashGenerator from '@/components/Tools/HashGenerator'
 import PasswordGenerator from '@/components/Tools/PasswordGenerator'
 import PasswordStrength from '@/components/Tools/PasswordStrength'
 import TimestampConverter from '@/components/Tools/TimestampConverter'
+import JWTDecoder from '@/components/Tools/JWTDecoder'
+import TextDiff from '@/components/Tools/TextDiff'
+import RegexTester from '@/components/Tools/RegexTester'
+import CSVToJSON from '@/components/Tools/CSVToJSON'
+import JSONToCSV from '@/components/Tools/JSONToCSV'
+import URLEncoder from '@/components/Tools/URLEncoder'
+import URLDecoder from '@/components/Tools/URLDecoder'
+import HTMLEncoder from '@/components/Tools/HTMLEncoder'
+import HTMLDecoder from '@/components/Tools/HTMLDecoder'
+import UUIDGenerator from '@/components/Tools/UUIDGenerator'
+import QRGenerator from '@/components/Tools/QRGenerator'
+import ColorPicker from '@/components/Tools/ColorPicker'
+import CronBuilder from '@/components/Tools/CronBuilder'
 
 const toolComponents: Record<string, React.ComponentType> = {
   'json-formatter': JSONFormatter,
@@ -22,6 +35,19 @@ const toolComponents: Record<string, React.ComponentType> = {
   'password-generator': PasswordGenerator,
   'password-strength': PasswordStrength,
   'timestamp-converter': TimestampConverter,
+  'jwt-decoder': JWTDecoder,
+  'text-diff': TextDiff,
+  'regex-tester': RegexTester,
+  'csv-to-json': CSVToJSON,
+  'json-to-csv': JSONToCSV,
+  'url-encode': URLEncoder,
+  'url-decode': URLDecoder,
+  'html-encode': HTMLEncoder,
+  'html-decode': HTMLDecoder,
+  'uuid-generator': UUIDGenerator,
+  'qr-generator': QRGenerator,
+  'color-picker': ColorPicker,
+  'cron-builder': CronBuilder,
 }
 
 export default function ToolPage() {
