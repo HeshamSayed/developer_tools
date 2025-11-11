@@ -29,6 +29,12 @@ import XMLFormatter from '@/components/Tools/XMLFormatter'
 import XMLValidator from '@/components/Tools/XMLValidator'
 import YAMLFormatter from '@/components/Tools/YAMLFormatter'
 import MarkdownPreview from '@/components/Tools/MarkdownPreview'
+import CSSFormatter from '@/components/Tools/CSSFormatter'
+import JavaScriptFormatter from '@/components/Tools/JavaScriptFormatter'
+import ImageConverter from '@/components/Tools/ImageConverter'
+import LoremIpsumGenerator from '@/components/Tools/LoremIpsumGenerator'
+import BinaryHexConverter from '@/components/Tools/BinaryHexConverter'
+import ASCIIArtGenerator from '@/components/Tools/ASCIIArtGenerator'
 
 const toolComponents: Record<string, React.ComponentType> = {
   'json-formatter': JSONFormatter,
@@ -58,6 +64,12 @@ const toolComponents: Record<string, React.ComponentType> = {
   'xml-validator': XMLValidator,
   'yaml-formatter': YAMLFormatter,
   'markdown-preview': MarkdownPreview,
+  'css-formatter': CSSFormatter,
+  'js-formatter': JavaScriptFormatter,
+  'image-converter': ImageConverter,
+  'lorem-ipsum-generator': LoremIpsumGenerator,
+  'binary-hex-converter': BinaryHexConverter,
+  'ascii-art-generator': ASCIIArtGenerator,
 }
 
 export default function ToolPage() {

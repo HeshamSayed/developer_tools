@@ -11,6 +11,7 @@ from api.views import (
     encoding_tools,
     generator_tools,
     advanced_tools,
+    utility_tools,
 )
 
 urlpatterns = [
@@ -60,4 +61,14 @@ urlpatterns = [
     path('xml/validate', advanced_tools.XMLValidatorView.as_view(), name='xml-validate'),
     path('yaml/format', advanced_tools.YAMLFormatterView.as_view(), name='yaml-format'),
     path('markdown/preview', advanced_tools.MarkdownPreviewView.as_view(), name='markdown-preview'),
+
+    # Utility Tools
+    path('css/format', utility_tools.CSSFormatterView.as_view(), name='css-format'),
+    path('css/minify', utility_tools.CSSMinifierView.as_view(), name='css-minify'),
+    path('js/format', utility_tools.JavaScriptFormatterView.as_view(), name='js-format'),
+    path('js/minify', utility_tools.JavaScriptMinifierView.as_view(), name='js-minify'),
+    path('image/convert', utility_tools.ImageConverterView.as_view(), name='image-convert'),
+    path('lorem/generate', utility_tools.LoremIpsumGeneratorView.as_view(), name='lorem-generate'),
+    path('binary/convert', utility_tools.BinaryHexConverterView.as_view(), name='binary-convert'),
+    path('ascii/generate', utility_tools.ASCIIArtGeneratorView.as_view(), name='ascii-generate'),
 ]

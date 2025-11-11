@@ -73,6 +73,18 @@ export const toolCategories: ToolCategory[] = [
         description: 'Decode and inspect JWT tokens',
         category: 'text-tools',
       },
+      {
+        slug: 'css-formatter',
+        name: 'CSS Formatter/Minifier',
+        description: 'Format and minify CSS code',
+        category: 'text-tools',
+      },
+      {
+        slug: 'js-formatter',
+        name: 'JavaScript Formatter/Minifier',
+        description: 'Format and minify JavaScript code',
+        category: 'text-tools',
+      },
     ],
   },
   {
@@ -137,6 +149,18 @@ export const toolCategories: ToolCategory[] = [
         description: 'Convert JSON to CSV format',
         category: 'conversion-tools',
       },
+      {
+        slug: 'image-converter',
+        name: 'Image Converter',
+        description: 'Convert images between PNG, JPG, and WebP formats',
+        category: 'conversion-tools',
+      },
+      {
+        slug: 'binary-hex-converter',
+        name: 'Binary/Hex Converter',
+        description: 'Convert between binary, hexadecimal, and decimal',
+        category: 'conversion-tools',
+      },
     ],
   },
   {
@@ -193,6 +217,18 @@ export const toolCategories: ToolCategory[] = [
         slug: 'cron-builder',
         name: 'Cron Expression Builder',
         description: 'Build and visualize cron expressions',
+        category: 'generator-tools',
+      },
+      {
+        slug: 'lorem-ipsum-generator',
+        name: 'Lorem Ipsum Generator',
+        description: 'Generate Lorem Ipsum placeholder text',
+        category: 'generator-tools',
+      },
+      {
+        slug: 'ascii-art-generator',
+        name: 'ASCII Art Generator',
+        description: 'Generate ASCII art from text',
         category: 'generator-tools',
       },
     ],

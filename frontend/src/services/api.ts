@@ -162,4 +162,45 @@ export const previewMarkdown = async (input: string): Promise<ApiResponse> => {
   return response.data
 }
 
+// Utility Tools
+export const formatCSS = async (input: string, indentSize: number = 2): Promise<ApiResponse> => {
+  const response = await api.post('/tools/css/format', { input, indent_size: indentSize })
+  return response.data
+}
+
+export const minifyCSS = async (input: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/css/minify', { input })
+  return response.data
+}
+
+export const formatJavaScript = async (input: string, indentSize: number = 2): Promise<ApiResponse> => {
+  const response = await api.post('/tools/js/format', { input, indent_size: indentSize })
+  return response.data
+}
+
+export const minifyJavaScript = async (input: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/js/minify', { input })
+  return response.data
+}
+
+export const convertImage = async (image: string, format: string, quality: number = 90): Promise<ApiResponse> => {
+  const response = await api.post('/tools/image/convert', { image, format, quality })
+  return response.data
+}
+
+export const generateLoremIpsum = async (count: number, unit: string, startWithLorem: boolean = true): Promise<ApiResponse> => {
+  const response = await api.post('/tools/lorem/generate', { count, unit, start_with_lorem: startWithLorem })
+  return response.data
+}
+
+export const convertBinaryHex = async (input: string, inputType: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/binary/convert', { input, input_type: inputType })
+  return response.data
+}
+
+export const generateASCIIArt = async (text: string, font: string = 'standard'): Promise<ApiResponse> => {
+  const response = await api.post('/tools/ascii/generate', { text, font })
+  return response.data
+}
+
 export default api
