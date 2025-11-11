@@ -136,4 +136,30 @@ export const generateQRCode = async (text: string, size: number = 10, errorCorre
   return response.data
 }
 
+// Advanced Tools
+export const formatSQL = async (input: string, keywordCase: string = 'upper', reindent: boolean = true): Promise<ApiResponse> => {
+  const response = await api.post('/tools/sql/format', { input, keyword_case: keywordCase, reindent })
+  return response.data
+}
+
+export const formatXML = async (input: string, indent: number = 2): Promise<ApiResponse> => {
+  const response = await api.post('/tools/xml/format', { input, indent })
+  return response.data
+}
+
+export const validateXML = async (input: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/xml/validate', { input })
+  return response.data
+}
+
+export const formatYAML = async (input: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/yaml/format', { input })
+  return response.data
+}
+
+export const previewMarkdown = async (input: string): Promise<ApiResponse> => {
+  const response = await api.post('/tools/markdown/preview', { input })
+  return response.data
+}
+
 export default api

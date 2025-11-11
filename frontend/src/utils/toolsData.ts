@@ -26,6 +26,36 @@ export const toolCategories: ToolCategory[] = [
         category: 'text-tools',
       },
       {
+        slug: 'sql-formatter',
+        name: 'SQL Formatter',
+        description: 'Format SQL queries with syntax highlighting',
+        category: 'text-tools',
+      },
+      {
+        slug: 'xml-formatter',
+        name: 'XML Formatter',
+        description: 'Format and beautify XML documents',
+        category: 'text-tools',
+      },
+      {
+        slug: 'xml-validator',
+        name: 'XML Validator',
+        description: 'Validate XML structure and syntax',
+        category: 'text-tools',
+      },
+      {
+        slug: 'yaml-formatter',
+        name: 'YAML Formatter',
+        description: 'Format and validate YAML configuration files',
+        category: 'text-tools',
+      },
+      {
+        slug: 'markdown-preview',
+        name: 'Markdown Preview',
+        description: 'Live markdown editor with HTML preview',
+        category: 'text-tools',
+      },
+      {
         slug: 'text-diff',
         name: 'Text Diff',
         description: 'Compare two texts and highlight differences',

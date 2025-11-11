@@ -24,6 +24,11 @@ import UUIDGenerator from '@/components/Tools/UUIDGenerator'
 import QRGenerator from '@/components/Tools/QRGenerator'
 import ColorPicker from '@/components/Tools/ColorPicker'
 import CronBuilder from '@/components/Tools/CronBuilder'
+import SQLFormatter from '@/components/Tools/SQLFormatter'
+import XMLFormatter from '@/components/Tools/XMLFormatter'
+import XMLValidator from '@/components/Tools/XMLValidator'
+import YAMLFormatter from '@/components/Tools/YAMLFormatter'
+import MarkdownPreview from '@/components/Tools/MarkdownPreview'
 
 const toolComponents: Record<string, React.ComponentType> = {
   'json-formatter': JSONFormatter,
@@ -48,6 +53,11 @@ const toolComponents: Record<string, React.ComponentType> = {
   'qr-generator': QRGenerator,
   'color-picker': ColorPicker,
   'cron-builder': CronBuilder,
+  'sql-formatter': SQLFormatter,
+  'xml-formatter': XMLFormatter,
+  'xml-validator': XMLValidator,
+  'yaml-formatter': YAMLFormatter,
+  'markdown-preview': MarkdownPreview,
 }
 
 export default function ToolPage() {

@@ -10,6 +10,7 @@ from api.views import (
     conversion_tools,
     encoding_tools,
     generator_tools,
+    advanced_tools,
 )
 
 urlpatterns = [
@@ -52,4 +53,11 @@ urlpatterns = [
     # Generator Tools
     path('generate/uuid', generator_tools.UUIDGeneratorView.as_view(), name='uuid-generate'),
     path('generate/qrcode', generator_tools.QRCodeGeneratorView.as_view(), name='qrcode-generate'),
+
+    # Advanced Tools
+    path('sql/format', advanced_tools.SQLFormatterView.as_view(), name='sql-format'),
+    path('xml/format', advanced_tools.XMLFormatterView.as_view(), name='xml-format'),
+    path('xml/validate', advanced_tools.XMLValidatorView.as_view(), name='xml-validate'),
+    path('yaml/format', advanced_tools.YAMLFormatterView.as_view(), name='yaml-format'),
+    path('markdown/preview', advanced_tools.MarkdownPreviewView.as_view(), name='markdown-preview'),
 ]
