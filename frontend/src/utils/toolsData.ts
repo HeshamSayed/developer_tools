@@ -187,6 +187,12 @@ export const toolCategories: ToolCategory[] = [
         description: 'Analyze password strength and get suggestions',
         category: 'security-tools',
       },
+      {
+        slug: 'ssl-checker',
+        name: 'SSL Certificate Checker',
+        description: 'Check SSL/TLS certificate information and validity',
+        category: 'security-tools',
+      },
     ],
   },
   {

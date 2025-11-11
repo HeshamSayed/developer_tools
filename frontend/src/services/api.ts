@@ -203,4 +203,10 @@ export const generateASCIIArt = async (text: string, font: string = 'standard'):
   return response.data
 }
 
+// SSL Checker
+export const checkSSL = async (domain: string, port: number = 443): Promise<ApiResponse> => {
+  const response = await api.post('/tools/ssl/check', { domain, port })
+  return response.data
+}
+
 export default api

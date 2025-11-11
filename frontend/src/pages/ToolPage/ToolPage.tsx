@@ -39,6 +39,7 @@ import ImageConverter from '@/components/Tools/ImageConverter'
 import LoremIpsumGenerator from '@/components/Tools/LoremIpsumGenerator'
 import BinaryHexConverter from '@/components/Tools/BinaryHexConverter'
 import ASCIIArtGenerator from '@/components/Tools/ASCIIArtGenerator'
+import SSLChecker from '@/components/Tools/SSLChecker'
 
 const toolComponents: Record<string, React.ComponentType> = {
   'json-formatter': JSONFormatter,
@@ -74,6 +75,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'lorem-ipsum-generator': LoremIpsumGenerator,
   'binary-hex-converter': BinaryHexConverter,
   'ascii-art-generator': ASCIIArtGenerator,
+  'ssl-checker': SSLChecker,
 }
 
 export default function ToolPage() {

@@ -71,4 +71,5 @@ urlpatterns = [
     path('lorem/generate', utility_tools.LoremIpsumGeneratorView.as_view(), name='lorem-generate'),
     path('binary/convert', utility_tools.BinaryHexConverterView.as_view(), name='binary-convert'),
     path('ascii/generate', utility_tools.ASCIIArtGeneratorView.as_view(), name='ascii-generate'),
+    path('ssl/check', utility_tools.SSLCheckerView.as_view(), name='ssl-check'),
 ]

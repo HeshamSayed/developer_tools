@@ -6,6 +6,7 @@ Libraries used:
 - jsbeautifier (MIT License) - JavaScript/CSS formatting
 - Pillow (HPND License) - Image processing
 - pyfiglet (MIT License) - ASCII art generation
+- ssl, socket (Python standard library) - SSL certificate checking
 """
 
 from rest_framework.views import APIView
@@ -20,6 +21,9 @@ import base64
 import re
 import pyfiglet
 import random
+import ssl
+import socket
+from datetime import datetime
 
 
 class CSSFormatterView(APIView):
@@ -473,4 +477,139 @@ class ASCIIArtGeneratorView(APIView):
             return Response({
                 'success': False,
                 'error': f'Failed to generate ASCII art: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class SSLCheckerView(APIView):
+    """Check SSL/TLS certificate information for a domain"""
+
+    def post(self, request):
+        try:
+            domain = request.data.get('domain', '').strip()
+            port = request.data.get('port', 443)
+
+            if not domain:
+                raise ToolException('Domain is required')
+
+            # Remove protocol if provided
+            domain = domain.replace('https://', '').replace('http://', '')
+            # Remove path if provided
+            domain = domain.split('/')[0]
+            # Remove port if provided
+            if ':' in domain:
+                parts = domain.split(':')
+                domain = parts[0]
+                try:
+                    port = int(parts[1])
+                except (ValueError, IndexError):
+                    pass
+
+            if not domain:
+                raise ToolException('Invalid domain')
+
+            # Validate port
+            try:
+                port = int(port)
+                if port < 1 or port > 65535:
+                    raise ValueError()
+            except ValueError:
+                raise ToolException('Invalid port number (1-65535)')
+
+            # Create SSL context
+            context = ssl.create_default_context()
+
+            # Connect to the server and get certificate
+            try:
+                with socket.create_connection((domain, port), timeout=10) as sock:
+                    with context.wrap_socket(sock, server_hostname=domain) as ssock:
+                        cert = ssock.getpeercert()
+                        cipher = ssock.cipher()
+                        version = ssock.version()
+            except socket.gaierror:
+                raise ToolException(f'Could not resolve domain: {domain}')
+            except socket.timeout:
+                raise ToolException(f'Connection timeout for {domain}:{port}')
+            except ssl.SSLError as e:
+                raise ToolException(f'SSL Error: {str(e)}')
+            except ConnectionRefusedError:
+                raise ToolException(f'Connection refused to {domain}:{port}')
+            except Exception as e:
+                raise ToolException(f'Connection error: {str(e)}')
+
+            # Parse certificate information
+            subject = dict(x[0] for x in cert['subject'])
+            issuer = dict(x[0] for x in cert['issuer'])
+
+            # Parse dates
+            not_before = datetime.strptime(cert['notBefore'], '%b %d %H:%M:%S %Y %Z')
+            not_after = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
+
+            # Calculate days until expiration
+            now = datetime.now()
+            days_remaining = (not_after - now).days
+
+            # Determine status
+            if days_remaining < 0:
+                cert_status = 'expired'
+                status_color = 'danger'
+            elif days_remaining < 30:
+                cert_status = 'expiring_soon'
+                status_color = 'warning'
+            else:
+                cert_status = 'valid'
+                status_color = 'success'
+
+            # Get Subject Alternative Names (SANs)
+            san_list = []
+            for san_type, san_value in cert.get('subjectAltName', []):
+                if san_type == 'DNS':
+                    san_list.append(san_value)
+
+            result = {
+                'domain': domain,
+                'port': port,
+                'status': cert_status,
+                'status_color': status_color,
+                'valid': cert_status == 'valid',
+                'days_remaining': days_remaining,
+                'subject': {
+                    'common_name': subject.get('commonName', 'N/A'),
+                    'organization': subject.get('organizationName', 'N/A'),
+                    'organizational_unit': subject.get('organizationalUnitName', 'N/A'),
+                    'country': subject.get('countryName', 'N/A'),
+                },
+                'issuer': {
+                    'common_name': issuer.get('commonName', 'N/A'),
+                    'organization': issuer.get('organizationName', 'N/A'),
+                    'country': issuer.get('countryName', 'N/A'),
+                },
+                'validity': {
+                    'not_before': not_before.strftime('%Y-%m-%d %H:%M:%S UTC'),
+                    'not_after': not_after.strftime('%Y-%m-%d %H:%M:%S UTC'),
+                    'days_remaining': days_remaining,
+                },
+                'subject_alternative_names': san_list,
+                'serial_number': cert.get('serialNumber', 'N/A'),
+                'version': cert.get('version', 'N/A'),
+                'cipher_suite': {
+                    'name': cipher[0] if cipher else 'N/A',
+                    'protocol': version if version else 'N/A',
+                    'bits': cipher[2] if cipher and len(cipher) > 2 else 'N/A',
+                },
+            }
+
+            return Response({
+                'success': True,
+                'result': result
+            })
+
+        except ToolException as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': f'Failed to check SSL certificate: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
