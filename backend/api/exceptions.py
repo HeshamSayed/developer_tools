@@ -6,6 +6,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+class ToolException(Exception):
+    """Custom exception for tool-specific errors"""
+    pass
+
+
 def custom_exception_handler(exc, context):
     """
     Custom exception handler for consistent error responses
