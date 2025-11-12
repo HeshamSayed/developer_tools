@@ -74,9 +74,9 @@ export const ADSENSE_CONFIG = {
   refreshInterval: 0, // Auto-refresh ads (0 = disabled, recommended to keep disabled)
 
   // Advanced Revenue Features
-  enableAutoAds: import.meta.env.VITE_ADSENSE_AUTO_ADS === 'true' || false, // Let Google optimize placement
+  enableAutoAds: import.meta.env.VITE_ADSENSE_AUTO_ADS === 'true' || true, // Let Google optimize placement
   enableAnchorAds: import.meta.env.VITE_ADSENSE_ANCHOR_ADS === 'true' || true, // Sticky mobile ads (+30% mobile revenue)
-  enableVignetteAds: import.meta.env.VITE_ADSENSE_VIGNETTE_ADS === 'true' || false, // Full-screen between pages
+  enableVignetteAds: import.meta.env.VITE_ADSENSE_VIGNETTE_ADS === 'true' || true, // Full-screen between pages
   enableMultiplexAds: import.meta.env.VITE_ADSENSE_MULTIPLEX_ADS === 'true' || true, // Related content ads
 
   // Ad Refresh for Single Page Applications (use carefully!)
@@ -88,9 +88,9 @@ export const ADSENSE_CONFIG = {
 
   // Ad Density (more ads = more revenue, but worse UX if overdone)
   adDensity: {
-    homepage: 'high', // Show more ads on homepage (high traffic)
-    toolPage: 'medium', // Balanced ads on tool pages
-    mobile: 'medium', // Moderate ads on mobile
+    homepage: 'very-high', // Maximum ads on homepage (highest traffic)
+    toolPage: 'high', // More ads on tool pages
+    mobile: 'high', // More ads on mobile (high mobile traffic)
   },
 
   // Compliance

@@ -4,6 +4,7 @@ export interface Tool {
   description: string
   category: string
   icon?: string
+  badge?: string // For Beta, New, Popular badges
 }
 
 export interface ToolCategory {

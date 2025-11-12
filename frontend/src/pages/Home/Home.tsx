@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toolCategories } from '@/utils/toolsData'
 import AdBanner from '@/components/Ads/AdBanner'
+import VideoAd from '@/components/Ads/VideoAd'
+import PopupAd from '@/components/Ads/PopupAd'
 import { useFavorites } from '@/hooks/useFavorites'
 import { useToolHistory } from '@/hooks/useToolHistory'
 import { getToolBySlug } from '@/utils/toolsData'
@@ -26,24 +28,34 @@ export default function Home() {
   const favoriteTools = favorites.slice(0, 3).map(slug => getToolBySlug(slug)).filter(Boolean)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Top Banner Ad */}
-      <AdBanner slot="topBanner" className="mb-8" />
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      {/* Popup Ad (non-intrusive, shows after 30s) */}
+      <PopupAd delay={30000} frequency={5} />
 
-      {/* Hero Section */}
-      <div className="text-center mb-12 animate-fade-in-up">
-        <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-900/20 dark:to-accent-900/20 rounded-full border border-primary-200 dark:border-primary-800">
-          <span className="text-sm font-semibold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-            {totalTools}+ Professional Developer Tools
-          </span>
+      {/* Top Banner Ad - Premium placement */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="max-w-7xl mx-auto">
+          <AdBanner slot="topBanner" className="py-4" />
         </div>
-        <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent mb-6 leading-tight">
-          Free Developer Tools
-        </h1>
-        <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-8">
-          Powerful, fast, and easy-to-use online tools for developers. Format JSON, encode Base64,
-          generate hashes, create passwords, and much more.
-        </p>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Hero Section - Professional Design */}
+        <div className="text-center mb-12 animate-fade-in-up">
+          <div className="inline-block mb-4 px-6 py-3 bg-gradient-to-r from-primary-50 via-accent-50 to-primary-50 dark:from-primary-900/30 dark:via-accent-900/30 dark:to-primary-900/30 rounded-full border-2 border-primary-200 dark:border-primary-700 shadow-lg">
+            <span className="text-sm font-bold bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent animate-pulse">
+              ⚡ {totalTools}+ Professional Developer Tools - 100% Free
+            </span>
+          </div>
+          <h1 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent mb-6 leading-tight tracking-tight">
+            Developer Tools
+          </h1>
+          <p className="text-2xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto mb-4 font-medium">
+            Powerful, Fast & Professional Online Tools
+          </p>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-10">
+            Format JSON, encode Base64, generate hashes, create passwords, build CSS designs, and much more. All tools are 100% free, secure, and privacy-focused.
+          </p>
 
         {/* Search Bar */}
         <div className="max-w-2xl mx-auto">
@@ -146,9 +158,22 @@ export default function Home() {
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-primary-500/0 via-accent-500/0 to-primary-500/0 group-hover:from-primary-500/5 group-hover:via-accent-500/5 group-hover:to-primary-500/5 transition-all duration-300"></div>
                   <div className="relative">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                      {tool.name}
-                    </h3>
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                        {tool.name}
+                      </h3>
+                      {tool.badge && (
+                        <span className={`px-2 py-1 text-xs font-bold rounded-full ${
+                          tool.badge === 'BETA'
+                            ? 'bg-accent-500 text-white animate-pulse'
+                            : tool.badge === 'NEW'
+                            ? 'bg-green-500 text-white'
+                            : 'bg-yellow-500 text-white'
+                        }`}>
+                          {tool.badge}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">
                       {tool.description}
                     </p>
@@ -163,21 +188,51 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Native Ad between categories */}
-            {category !== toolCategories[toolCategories.length - 1] && (
-              <div className="my-8">
+            {/* Strategic Ad Placement after important categories */}
+            {(categoryIndex === 1 || categoryIndex === 3) && (
+              <div className="my-10">
+                <div className="text-center mb-4">
+                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+                </div>
                 <AdBanner slot="bottomBanner" />
+              </div>
+            )}
+
+            {/* Video Ad after 2nd category */}
+            {categoryIndex === 2 && (
+              <div className="my-12 flex justify-center">
+                <VideoAd width={728} height={400} />
               </div>
             )}
           </div>
         ))}
       </div>
+      </div>
+
+      {/* Bottom Section with Video Ad */}
+      <div className="mt-16 mb-12">
+        <div className="text-center mb-6">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            Support Our Free Tools
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            Watch a quick ad to help us keep these tools free forever
+          </p>
+        </div>
+        <div className="flex justify-center">
+          <VideoAd width={640} height={360} />
+        </div>
+      </div>
 
       {/* Bottom Banner Ad */}
-      <AdBanner slot="bottomBanner" className="mt-12" />
+      <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 py-8">
+        <div className="max-w-7xl mx-auto px-4">
+          <AdBanner slot="bottomBanner" className="mb-8" />
+        </div>
+      </div>
 
       {/* Features Section */}
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="text-center group animate-fade-in-up" style={{ animationDelay: '300ms' }}>
           <div className="bg-gradient-to-br from-primary-100 to-accent-100 dark:from-primary-900 dark:to-accent-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:shadow-glow transition-all duration-300">
             <svg className="w-8 h-8 text-primary-600 dark:text-primary-400 group-hover:animate-bounce-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,6 +273,26 @@ export default function Home() {
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             Access all tools 24/7 from any device, completely free
           </p>
+        </div>
+      </div>
+
+      {/* Final CTA Section */}
+      <div className="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 text-white py-16 mt-16">
+        <div className="max-w-4xl mx-auto text-center px-4">
+          <h2 className="text-4xl font-bold mb-4">Ready to boost your productivity?</h2>
+          <p className="text-xl mb-8 opacity-90">
+            Join thousands of developers using our tools daily - completely free!
+          </p>
+          <a
+            href="#search"
+            onClick={(e) => {
+              e.preventDefault()
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            className="inline-block bg-white text-primary-600 px-8 py-4 rounded-full font-bold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
+          >
+            Explore All Tools
+          </a>
         </div>
       </div>
     </div>
