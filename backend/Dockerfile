@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     libpq-dev \
     netcat-openbsd \
+    libgl1 \
+    libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
