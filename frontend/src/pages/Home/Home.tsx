@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Top Banner Ad */}
-      <AdBanner position="homepage-top" className="mb-8" />
+      <AdBanner slot="topBanner" className="mb-8" />
 
       {/* Hero Section */}
       <div className="text-center mb-12 animate-fade-in-up">
@@ -166,7 +166,7 @@ export default function Home() {
             {/* Native Ad between categories */}
             {category !== toolCategories[toolCategories.length - 1] && (
               <div className="my-8">
-                <AdBanner position={`homepage-category-${category.slug}`} />
+                <AdBanner slot="bottomBanner" />
               </div>
             )}
           </div>
@@ -174,7 +174,7 @@ export default function Home() {
       </div>
 
       {/* Bottom Banner Ad */}
-      <AdBanner position="homepage-bottom" className="mt-12" />
+      <AdBanner slot="bottomBanner" className="mt-12" />
 
       {/* Features Section */}
       <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">

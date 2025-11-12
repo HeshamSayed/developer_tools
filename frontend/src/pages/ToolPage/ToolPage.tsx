@@ -144,7 +144,7 @@ export default function ToolPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Top Banner Ad */}
-      <AdBanner position="tool-top" className="mb-6" />
+      <AdBanner slot="topBanner" className="mb-6" />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Main Content */}
@@ -182,7 +182,7 @@ export default function ToolPage() {
           </div>
 
           {/* In-Content Ad */}
-          <AdBanner position="tool-in-content" className="my-8" />
+          <AdBanner slot="bottomBanner" className="my-8" />
 
           {/* Tool Description/Instructions */}
           <div className="card mt-8">
@@ -207,7 +207,7 @@ export default function ToolPage() {
       </div>
 
       {/* Below Results Ad */}
-      <AdBanner position="tool-below-results" className="mt-8" />
+      <AdBanner slot="bottomBanner" className="mt-8" />
     </div>
   )
 }

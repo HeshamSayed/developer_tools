@@ -42,7 +42,7 @@ export default function VignetteAd({
   const [showAd, setShowAd] = useState(false)
   const [navigationCount, setNavigationCount] = useState(0)
   const adRef = useRef<HTMLDivElement>(null)
-  const dismissTimerRef = useRef<NodeJS.Timeout>()
+  const dismissTimerRef = useRef<ReturnType<typeof setTimeout>>()
 
   useEffect(() => {
     if (!ADSENSE_CONFIG.enableVignetteAds || !shouldShowAds()) return

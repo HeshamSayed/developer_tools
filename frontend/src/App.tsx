@@ -3,6 +3,8 @@ import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout/Layout'
 import Home from './pages/Home/Home'
 import ToolPage from './pages/ToolPage/ToolPage'
+import PrivacyPolicy from './pages/Legal/PrivacyPolicy'
+import TermsOfService from './pages/Legal/TermsOfService'
 import { NotificationProvider } from './contexts/NotificationContext'
 import ErrorBoundary from './components/Common/ErrorBoundary'
 import Loading from './components/Common/Loading'
@@ -21,6 +23,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/tools/:toolSlug" element={<ToolPage />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
             </Routes>
           </Suspense>
         </Layout>
