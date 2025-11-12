@@ -4,6 +4,45 @@ A comprehensive free developer tools website built with Django/DRF backend and R
 
 ## ✨ Features
 
+### 🐍 Python-Powered Backend APIs (NEW!)
+
+**Advanced processing capabilities using powerful Python libraries:**
+
+**🖼️ Image Tools** (PIL, OpenCV, scikit-image):
+- Image Resizer - Advanced algorithms (LANCZOS, BICUBIC)
+- Image Compressor - JPEG/PNG/WebP optimization
+- Image Enhancer - Brightness, contrast, color, sharpness
+- Image Filters - Blur, sharpen, edge detect, sepia, vintage
+- Background Remover - AI-powered GrabCut algorithm
+- Face Detection - OpenCV Haar Cascades
+- Sketch Converter - Pencil sketch effects
+- Image Watermark - Custom text watermarks
+
+**📄 PDF Tools** (PyPDF2, reportlab, pdfplumber):
+- PDF Merger & Splitter
+- Text & Table Extraction
+- PDF Compression & Rotation
+- PDF Watermarking
+- PDF Creation from text
+- PDF Metadata extraction
+
+**📊 Data Tools** (pandas, numpy, scipy):
+- CSV Analysis with comprehensive statistics
+- CSV/JSON conversion
+- Correlation analysis (Pearson, Spearman, Kendall)
+- Outlier detection (IQR method)
+- Data normalization (MinMax, Z-score, Robust)
+- Data cleaning & transformation
+- Group aggregation & pivot tables
+
+**💻 Code Tools** (autopep8, black, radon, bandit):
+- Python code formatting (Black, autopep8)
+- Code complexity analysis (Cyclomatic, Halstead)
+- Lines of code counting
+- Security vulnerability scanning (Bandit)
+- JS/CSS minification & beautification
+- Syntax checking
+
 ### 🚀 All Phases + Advanced Features Implemented (29 Tools)
 
 **📝 Text & Code Tools:**
@@ -70,14 +109,17 @@ A comprehensive free developer tools website built with Django/DRF backend and R
 ### Backend
 - **Framework:** Django 5.0.1 + Django REST Framework 3.14.0
 - **Database:** PostgreSQL
-- **Libraries:**
-  - qrcode, Pillow, pytz (base tools)
-  - sqlparse (SQL formatting)
-  - PyYAML (YAML processing)
-  - Markdown (markdown rendering)
-  - Pygments (syntax highlighting)
+- **Python Libraries (40+ packages):**
+  - **Base Tools:** qrcode, Pillow, pytz, sqlparse, PyYAML, Markdown, Pygments
+  - **Image Processing:** PIL, opencv-python, opencv-contrib-python, scikit-image, imageio
+  - **PDF Manipulation:** PyPDF2, reportlab, pdfplumber, pypdf
+  - **Data Analysis:** pandas, numpy, scipy, openpyxl
+  - **Code Tools:** autopep8, black, flake8, pylint, radon, bandit
+  - **Text Processing:** nltk, textblob, spacy
+  - **ML/AI (ready):** scikit-learn, tensorflow, torch, transformers
+  - **Utilities:** requests, beautifulsoup4, lxml, jsbeautifier, cssbeautifier
 - **Features:**
-  - RESTful API endpoints (29 tool endpoints + 2 system endpoints)
+  - RESTful API endpoints (50+ endpoints including Python-powered tools)
   - CORS support for frontend integration
   - Rate limiting (100 requests/minute per IP)
   - Input validation and error handling
@@ -86,6 +128,7 @@ A comprehensive free developer tools website built with Django/DRF backend and R
   - Automatic sitemap generation
   - Analytics dashboard API
   - Health check endpoints
+  - Advanced image/PDF/data processing APIs
 
 ### Frontend
 - **Framework:** React 18.3 + TypeScript
@@ -109,6 +152,7 @@ A comprehensive free developer tools website built with Django/DRF backend and R
   - Processing time metrics
   - Error handling with user-friendly messages
   - Custom React hooks for history, favorites, keyboard shortcuts 🆕
+  - **Backend API Service** 🆕 - Comprehensive TypeScript API layer for Python backend integration
 
 ### Advanced Enhancements ✅
 - **Code Formatting:** SQL, XML, YAML formatters with syntax highlighting
@@ -124,29 +168,38 @@ A comprehensive free developer tools website built with Django/DRF backend and R
 developer_tools/
 ├── backend/
 │   ├── core/                 # Django settings and configuration
-│   ├── tools/                # Tool implementation logic
+│   ├── tools/                # Base tool implementation logic
 │   ├── analytics/            # Usage tracking and analytics models
 │   ├── api/                  # DRF views and endpoints
 │   │   └── views/
-│   │       ├── advanced_tools.py  # 🆕 SQL, XML, YAML, Markdown
+│   │       ├── advanced_tools.py  # SQL, XML, YAML, Markdown
 │   │       └── ...
+│   ├── image_tools/          # 🆕 PIL/OpenCV image processing
+│   ├── pdf_tools/            # 🆕 PyPDF2/pdfplumber PDF manipulation
+│   ├── data_tools/           # 🆕 pandas/numpy data analysis
+│   ├── code_tools/           # 🆕 black/radon code analysis
+│   ├── ml_tools/             # 🆕 ML capabilities (structure ready)
 │   ├── manage.py
-│   └── requirements.txt
+│   ├── requirements.txt      # 40+ Python packages
+│   └── README.md             # Backend setup guide
 ├── frontend/
 │   ├── src/
 │   │   ├── components/       # React components
 │   │   │   ├── Layout/      # Header, Footer
-│   │   │   ├── Tools/       # Individual tool components (29)
-│   │   │   ├── Common/      # Shared components + CodeBlock 🆕
+│   │   │   ├── Tools/       # Individual tool components (35+)
+│   │   │   ├── Common/      # Shared components + CodeBlock
 │   │   │   └── Ads/         # Ad placement components
-│   │   ├── hooks/           # 🆕 Custom hooks (history, favorites, shortcuts)
+│   │   ├── hooks/           # Custom hooks (history, favorites, shortcuts)
 │   │   ├── pages/           # Home and ToolPage
 │   │   ├── services/        # API service layer
+│   │   │   └── backendApi.ts  # 🆕 Backend API integration
 │   │   ├── utils/           # Helper functions
 │   │   └── types/           # TypeScript types
 │   ├── package.json
 │   └── vite.config.ts
-├── README.md
+├── docker-compose.yml        # Full stack deployment
+├── INTEGRATION_GUIDE.md      # 🆕 Frontend-Backend integration docs
+└── README.md
 ├── DEPLOYMENT.md
 └── PROJECT_STATUS.md
 ```
