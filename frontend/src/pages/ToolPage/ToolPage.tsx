@@ -240,20 +240,8 @@ export default function ToolPage() {
           {/* In-Content Ad */}
           <AdBanner slot="bottomBanner" className="my-8" />
 
-          {/* Tool Description/Instructions */}
-          <div className="card mt-8">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              How to use
-            </h2>
-            <div className="prose dark:prose-invert max-w-none">
-              <ol className="list-decimal list-inside space-y-2 text-gray-600 dark:text-gray-400">
-                <li>Enter or paste your data in the input field</li>
-                <li>Configure any available options</li>
-                <li>Click the process button to see results</li>
-                <li>Copy the output to use it in your project</li>
-              </ol>
-            </div>
-          </div>
+          {/* Additional Ad Section */}
+          <AdBanner slot="bottomBanner" className="mt-8" />
         </div>
 
         {/* Sidebar */}
