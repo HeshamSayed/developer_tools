@@ -50,6 +50,9 @@ export default function Header() {
             <Link to="/tools/hash-generator" className="text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 transition-colors">
               Security
             </Link>
+            <Link to="/about" className="text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 transition-colors">
+              About
+            </Link>
 
             {/* Dark Mode Toggle */}
             <button
@@ -100,6 +103,9 @@ export default function Header() {
               </Link>
               <Link to="/tools/hash-generator" className="text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 py-2">
                 Security
+              </Link>
+              <Link to="/about" className="text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 py-2">
+                About
               </Link>
               <button
                 onClick={toggleDarkMode}
