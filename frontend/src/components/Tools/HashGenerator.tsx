@@ -96,7 +96,7 @@ export default function HashGenerator() {
         // Apply uppercase formatting if needed
         if (uppercase) {
           processedHashes = Object.fromEntries(
-            Object.entries(processedHashes).map(([algo, hash]) => [algo, String(hash).toUpperCase()])
+            Object.entries(processedHashes).map(([algo, hash]) => [algo, String(hash as string).toUpperCase()])
           )
         }
 

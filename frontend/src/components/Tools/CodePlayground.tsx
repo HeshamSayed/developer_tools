@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import type { FileNode, FileSystemState } from '@/types/filesystem'
+import type { FileNode } from '@/types/filesystem'
 import {
   createFileNode,
   exportFile,
@@ -18,7 +18,7 @@ import CodeEditor from '@/components/Common/CodeEditor'
 import AdBanner from '@/components/Ads/AdBanner'
 
 export default function CodePlayground() {
-  const { showNotification } = useNotification()
+  const { showSuccess } = useNotification()
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [showWarning, setShowWarning] = useState(false)
   const [showTemplates, setShowTemplates] = useState(false)
@@ -51,7 +51,7 @@ export default function CodePlayground() {
       setFiles(saved.files)
       setRootId(saved.rootId)
       setExpandedDirs(new Set([saved.rootId]))
-      showNotification('Project loaded from localStorage', 'success')
+      showSuccess('Project loaded from localStorage')
     } else {
       initializeEmptyProject()
     }
@@ -165,19 +165,19 @@ export default function CodePlayground() {
     setActiveFileId(null)
     setShowTemplates(false)
     setHasUnsavedChanges(false)
-    showNotification(`Loaded template: ${template.name}`, 'success')
+    showSuccess(`Loaded template: ${template.name}`)
   }
 
   const handleSave = () => {
     saveToLocalStorage({ files, rootId })
     setHasUnsavedChanges(false)
     const now = new Date().toLocaleTimeString()
-    showNotification(`Project saved at ${now}`, 'success')
+    showSuccess(`Project saved at ${now}`)
   }
 
   const handleExport = async () => {
     await exportAsZip(files, rootId)
-    showNotification('Project exported successfully', 'success')
+    showSuccess('Project exported successfully')
   }
 
   const handleNewProject = () => {
@@ -188,7 +188,7 @@ export default function CodePlayground() {
       setOpenTabs([])
       setActiveFileId(null)
       initializeEmptyProject()
-      showNotification('New project created', 'success')
+      showSuccess('New project created')
     }
   }
 
@@ -198,7 +198,7 @@ export default function CodePlayground() {
     // Check for duplicate names
     const siblings = Object.values(files).filter(f => f.parentId === creatingIn)
     if (siblings.some(s => s.name === newItemName.trim())) {
-      showNotification(`A ${newItemType} with this name already exists`, 'error')
+      showSuccess(`A ${newItemType} with this name already exists`)
       return
     }
 
@@ -215,7 +215,7 @@ export default function CodePlayground() {
 
     setCreatingIn(null)
     setNewItemName('')
-    showNotification(`${newItemType === 'file' ? 'File' : 'Folder'} created`, 'success')
+    showSuccess(`${newItemType === 'file' ? 'File' : 'Folder'} created`)
   }
 
   const startRename = (id: string) => {
@@ -235,7 +235,7 @@ export default function CodePlayground() {
     // Check for duplicate names
     const siblings = Object.values(files).filter(f => f.parentId === file.parentId && f.id !== renamingId)
     if (siblings.some(s => s.name === renameValue.trim())) {
-      showNotification('A file with this name already exists', 'error')
+      showSuccess('A file with this name already exists')
       return
     }
 
@@ -243,7 +243,7 @@ export default function CodePlayground() {
     setFiles(newFiles)
     setHasUnsavedChanges(true)
     setRenamingId(null)
-    showNotification('Renamed successfully', 'success')
+    showSuccess('Renamed successfully')
   }
 
   const deleteItem = (id: string) => {
@@ -283,7 +283,7 @@ export default function CodePlayground() {
     })
 
     setHasUnsavedChanges(true)
-    showNotification('Deleted successfully', 'success')
+    showSuccess('Deleted successfully')
   }
 
   const updateFileContent = (id: string, content: string) => {
@@ -809,7 +809,7 @@ export default function CodePlayground() {
                   initializeEmptyProject()
                   setHasUnsavedChanges(false)
                   setShowWarning(false)
-                  showNotification('New project created', 'success')
+                  showSuccess('New project created')
                 }}
                 className="flex-1 btn-sm bg-red-600 text-white hover:bg-red-700"
               >

@@ -13,11 +13,21 @@ interface Shadow {
   inset: boolean
 }
 
+interface PresetShadow {
+  horizontal: number
+  vertical: number
+  blur: number
+  spread: number
+  opacity: number
+  inset?: boolean
+  color?: string
+}
+
 type PreviewShape = 'rectangle' | 'circle' | 'rounded'
 type ExportFormat = 'css' | 'tailwind' | 'scss'
 
 export default function BoxShadowGenerator() {
-  const { showNotification } = useNotification()
+  const { showSuccess } = useNotification()
 
   const [shadows, setShadows] = useState<Shadow[]>([
     {
@@ -96,7 +106,7 @@ export default function BoxShadowGenerator() {
   // Add new shadow
   const addShadow = () => {
     if (shadows.length >= 5) {
-      showNotification('Maximum 5 shadow layers allowed', 'warning')
+      showSuccess('Maximum 5 shadow layers allowed')
       return
     }
 
@@ -113,13 +123,13 @@ export default function BoxShadowGenerator() {
 
     setShadows([...shadows, newShadow])
     setActiveShadowId(newShadow.id)
-    showNotification('Shadow layer added', 'success')
+    showSuccess('Shadow layer added')
   }
 
   // Remove shadow
   const removeShadow = (id: string) => {
     if (shadows.length <= 1) {
-      showNotification('At least one shadow layer is required', 'warning')
+      showSuccess('At least one shadow layer is required')
       return
     }
 
@@ -130,13 +140,13 @@ export default function BoxShadowGenerator() {
       setActiveShadowId(newShadows[0].id)
     }
 
-    showNotification('Shadow layer removed', 'success')
+    showSuccess('Shadow layer removed')
   }
 
   // Duplicate shadow
   const duplicateShadow = (id: string) => {
     if (shadows.length >= 5) {
-      showNotification('Maximum 5 shadow layers allowed', 'warning')
+      showSuccess('Maximum 5 shadow layers allowed')
       return
     }
 
@@ -150,7 +160,7 @@ export default function BoxShadowGenerator() {
 
     setShadows([...shadows, newShadow])
     setActiveShadowId(newShadow.id)
-    showNotification('Shadow layer duplicated', 'success')
+    showSuccess('Shadow layer duplicated')
   }
 
   // Load preset
@@ -168,11 +178,11 @@ export default function BoxShadowGenerator() {
 
     setShadows(newShadows)
     setActiveShadowId(newShadows[0].id)
-    showNotification(`Loaded preset: ${preset.name}`, 'success')
+    showSuccess(`Loaded preset: ${preset.name}`)
   }
 
   // Presets - Material Design, Tailwind, Custom
-  const presets = [
+  const presets: { name: string; shadows: PresetShadow[] }[] = [
     {
       name: 'Material - Elevation 1',
       shadows: [

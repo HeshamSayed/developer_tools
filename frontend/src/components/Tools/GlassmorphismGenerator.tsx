@@ -3,7 +3,7 @@ import CopyButton from '@/components/Common/CopyButton'
 import { useNotification } from '@/contexts/NotificationContext'
 
 export default function GlassmorphismGenerator() {
-  const { showNotification } = useNotification()
+  const { showSuccess } = useNotification()
 
   const [blur, setBlur] = useState(10)
   const [transparency, setTransparency] = useState(0.25)
@@ -72,7 +72,7 @@ box-shadow: 0 8px 32px 0 rgba(0, 0, 0, ${shadow / 100});`
     setBackgroundColor(preset.bg)
     setBorderRadius(preset.radius)
     setShadow(preset.shadow)
-    showNotification(`Loaded preset: ${preset.name}`, 'success')
+    showSuccess(`Loaded preset: ${preset.name}`)
   }
 
   return (

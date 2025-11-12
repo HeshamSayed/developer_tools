@@ -10,7 +10,7 @@ interface CustomBreakpoint {
 }
 
 export default function TailwindConfigGenerator() {
-  const { showNotification } = useNotification()
+  const { showSuccess } = useNotification()
 
   // Colors
   const [primaryColor, setPrimaryColor] = useState('#3b82f6')
@@ -28,8 +28,8 @@ export default function TailwindConfigGenerator() {
   const [maxWidth, setMaxWidth] = useState('1280px')
 
   // Breakpoints
-  const [customBreakpoints, setCustomBreakpoints] = useState<CustomBreakpoint[]>([])
-  const [includeCustomBreakpoints, setIncludeCustomBreakpoints] = useState(false)
+  const [customBreakpoints] = useState<CustomBreakpoint[]>([])
+  const [includeCustomBreakpoints] = useState(false)
 
   // Design Tokens
   const [borderRadius, setBorderRadius] = useState('0.5rem')
@@ -66,18 +66,29 @@ export default function TailwindConfigGenerator() {
     }
 
     const rgb = hexToRgb(hex)
+    const adjusted50 = adjustBrightness(rgb, 0.9)
+    const adjusted100 = adjustBrightness(rgb, 0.8)
+    const adjusted200 = adjustBrightness(rgb, 0.6)
+    const adjusted300 = adjustBrightness(rgb, 0.4)
+    const adjusted400 = adjustBrightness(rgb, 0.2)
+    const adjusted600 = adjustBrightness(rgb, -0.15)
+    const adjusted700 = adjustBrightness(rgb, -0.3)
+    const adjusted800 = adjustBrightness(rgb, -0.45)
+    const adjusted900 = adjustBrightness(rgb, -0.6)
+    const adjusted950 = adjustBrightness(rgb, -0.75)
+
     return {
-      50: rgbToHex(...Object.values(adjustBrightness(rgb, 0.9))),
-      100: rgbToHex(...Object.values(adjustBrightness(rgb, 0.8))),
-      200: rgbToHex(...Object.values(adjustBrightness(rgb, 0.6))),
-      300: rgbToHex(...Object.values(adjustBrightness(rgb, 0.4))),
-      400: rgbToHex(...Object.values(adjustBrightness(rgb, 0.2))),
+      50: rgbToHex(adjusted50.r, adjusted50.g, adjusted50.b),
+      100: rgbToHex(adjusted100.r, adjusted100.g, adjusted100.b),
+      200: rgbToHex(adjusted200.r, adjusted200.g, adjusted200.b),
+      300: rgbToHex(adjusted300.r, adjusted300.g, adjusted300.b),
+      400: rgbToHex(adjusted400.r, adjusted400.g, adjusted400.b),
       500: hex,
-      600: rgbToHex(...Object.values(adjustBrightness(rgb, -0.15))),
-      700: rgbToHex(...Object.values(adjustBrightness(rgb, -0.3))),
-      800: rgbToHex(...Object.values(adjustBrightness(rgb, -0.45))),
-      900: rgbToHex(...Object.values(adjustBrightness(rgb, -0.6))),
-      950: rgbToHex(...Object.values(adjustBrightness(rgb, -0.75))),
+      600: rgbToHex(adjusted600.r, adjusted600.g, adjusted600.b),
+      700: rgbToHex(adjusted700.r, adjusted700.g, adjusted700.b),
+      800: rgbToHex(adjusted800.r, adjusted800.g, adjusted800.b),
+      900: rgbToHex(adjusted900.r, adjusted900.g, adjusted900.b),
+      950: rgbToHex(adjusted950.r, adjusted950.g, adjusted950.b),
     }
   }
 
@@ -322,7 +333,7 @@ export default config`
     setAccentColor(preset.accent)
     setFontSans(preset.fontSans)
     setBorderRadius(preset.borderRadius)
-    showNotification(`Loaded preset: ${preset.name}`, 'success')
+    showSuccess(`Loaded preset: ${preset.name}`)
   }
 
   return (
