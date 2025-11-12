@@ -7,37 +7,46 @@ const BACKEND_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 // Helper function to handle API requests
 async function apiRequest<T>(endpoint: string, data: any): Promise<T> {
-  const response = await fetch(`${BACKEND_URL}${endpoint}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
-
-  if (!response.ok) {
-    // Try to parse as JSON first, fall back to text if it fails
-    try {
-      const error = await response.json()
-      throw new Error(error.error || error.message || 'API request failed')
-    } catch (jsonError) {
-      // If JSON parsing fails, get the text (likely HTML error page)
-      const text = await response.text()
-      // Check if it's HTML
-      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
-        throw new Error(`Server error (${response.status}): The backend server encountered an error. Please check server logs.`)
-      }
-      throw new Error(`API request failed: ${text.substring(0, 100)}`)
-    }
-  }
-
-  // Try to parse response as JSON
   try {
-    return await response.json()
-  } catch (parseError) {
-    const text = await response.text()
-    console.error('Failed to parse response:', text)
-    throw new Error('Invalid JSON response from server')
+    const response = await fetch(`${BACKEND_URL}${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+
+    if (!response.ok) {
+      // Try to parse as JSON first, fall back to text if it fails
+      try {
+        const error = await response.json()
+        throw new Error(error.error || error.message || 'API request failed')
+      } catch (jsonError) {
+        // If JSON parsing fails, get the text (likely HTML error page)
+        const text = await response.text()
+        // Check if it's HTML
+        if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+          throw new Error(`Server error (${response.status}): The backend server encountered an error. Please check server logs.`)
+        }
+        throw new Error(`API request failed: ${text.substring(0, 100)}`)
+      }
+    }
+
+    // Try to parse response as JSON
+    try {
+      return await response.json()
+    } catch (parseError) {
+      const text = await response.text()
+      console.error('Failed to parse response:', text)
+      throw new Error('Invalid JSON response from server')
+    }
+  } catch (error: any) {
+    // Handle network errors (fetch failed before getting a response)
+    if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
+      throw new Error(`Cannot connect to backend server at ${BACKEND_URL}. Please ensure the backend is running and CORS is configured correctly.`)
+    }
+    // Re-throw other errors
+    throw error
   }
 }
 
