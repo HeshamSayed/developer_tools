@@ -34,14 +34,14 @@ export default function JSONToCSV() {
     <div className="space-y-6">
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          JSON Input (Array of Objects)
+          JSON Input (Object or Array)
         </label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="textarea"
           rows={10}
-          placeholder='[{"name":"John","age":30,"city":"New York"},{"name":"Jane","age":25,"city":"Boston"}]'
+          placeholder='{"name":"John","age":30} or [{"name":"John"},{"name":"Jane"}]'
         />
       </div>
 

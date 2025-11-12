@@ -90,6 +90,8 @@ def convert_csv_to_json(request):
 def convert_json_to_csv(request):
     """
     Convert JSON to CSV format
+    Handles both single objects and arrays of objects
+    Flattens nested structures (arrays become comma-separated, objects become flattened columns)
     """
     try:
         json_data = request.data.get('json')
@@ -98,14 +100,53 @@ def convert_json_to_csv(request):
         if isinstance(json_data, str):
             json_data = json.loads(json_data)
 
-        df = pd.DataFrame(json_data)
+        # If it's a single object (dict), wrap it in a list
+        if isinstance(json_data, dict):
+            json_data = [json_data]
+
+        # Ensure we have a list
+        if not isinstance(json_data, list):
+            return Response({
+                'success': False,
+                'error': 'JSON must be an object or an array of objects'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Flatten nested structures
+        flattened_data = []
+        for item in json_data:
+            if not isinstance(item, dict):
+                continue
+
+            flattened_item = {}
+            for key, value in item.items():
+                if isinstance(value, dict):
+                    # Flatten nested objects: {"address": {"city": "Cairo"}} -> {"address.city": "Cairo"}
+                    for nested_key, nested_value in value.items():
+                        flattened_item[f"{key}.{nested_key}"] = nested_value
+                elif isinstance(value, list):
+                    # Convert lists to comma-separated strings
+                    flattened_item[key] = ', '.join(str(v) for v in value)
+                else:
+                    flattened_item[key] = value
+
+            flattened_data.append(flattened_item)
+
+        if not flattened_data:
+            return Response({
+                'success': False,
+                'error': 'No valid data found to convert'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        df = pd.DataFrame(flattened_data)
         csv_data = df.to_csv(index=False)
 
         return Response({
             'success': True,
-            'csv': csv_data,
-            'rows': len(df),
-            'columns': len(df.columns)
+            'result': csv_data,
+            'metadata': {
+                'row_count': len(df),
+                'column_count': len(df.columns)
+            }
         })
     except Exception as e:
         return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
