@@ -23,7 +23,7 @@ export default function CodePlayground() {
   const [showWarning, setShowWarning] = useState(false)
   const [showTemplates, setShowTemplates] = useState(false)
   const [autoSave, setAutoSave] = useState(true)
-  const autoSaveTimerRef = useRef<NodeJS.Timeout>()
+  const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout>>()
 
   // File System State
   const [files, setFiles] = useState<Record<string, FileNode>>({})
@@ -492,7 +492,7 @@ export default function CodePlayground() {
     <div className="h-screen flex flex-col bg-white dark:bg-gray-900">
       {/* Ad Banner */}
       <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700">
-        <AdBanner slot="code-playground-top" format="horizontal" />
+        <AdBanner slot="topBanner" format="horizontal" />
       </div>
 
       {/* Toolbar */}
