@@ -141,6 +141,16 @@ export default function Home() {
         </div>
       )}
 
+      {/* Ad Placement - After Quick Access */}
+      {!searchQuery && (
+        <div className="mb-12">
+          <div className="text-center mb-4">
+            <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+          </div>
+          <AdBanner slot="afterQuickAccess" />
+        </div>
+      )}
+
       {/* Tool Categories Grid */}
       <div className="space-y-12">
         {filteredCategories.map((category, categoryIndex) => (
@@ -194,20 +204,36 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Strategic Ad Placement after important categories */}
-            {(categoryIndex === 1 || categoryIndex === 3) && (
+            {/* Strategic Ad Placement - After Every Other Category */}
+            {categoryIndex % 2 === 1 && (
               <div className="my-10">
                 <div className="text-center mb-4">
                   <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
                 </div>
-                <AdBanner slot="bottomBanner" />
+                <AdBanner slot={`categoryAd${categoryIndex}`} />
               </div>
             )}
 
-            {/* Video Ad after 2nd category */}
-            {categoryIndex === 2 && (
+            {/* Video Ad Placements - Every 3 Categories */}
+            {categoryIndex % 3 === 2 && (
               <div className="my-12 flex justify-center">
+                <div className="text-center mb-4">
+                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+                </div>
                 <VideoAd width={728} height={400} />
+              </div>
+            )}
+
+            {/* Additional Banner Ad - Every 4 Categories */}
+            {categoryIndex % 4 === 3 && (
+              <div className="my-10">
+                <div className="text-center mb-4">
+                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored Content</span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <AdBanner slot={`sponsoredLeft${categoryIndex}`} />
+                  <AdBanner slot={`sponsoredRight${categoryIndex}`} />
+                </div>
               </div>
             )}
           </div>
@@ -215,7 +241,7 @@ export default function Home() {
       </div>
       </div>
 
-      {/* Bottom Section with Video Ad */}
+      {/* Bottom Section with Multiple Video Ads */}
       <div className="mt-16 mb-12">
         <div className="text-center mb-6">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
@@ -225,15 +251,30 @@ export default function Home() {
             Watch a quick ad to help us keep these tools free forever
           </p>
         </div>
-        <div className="flex justify-center">
-          <VideoAd width={640} height={360} />
+        <div className="space-y-8">
+          <div className="flex justify-center">
+            <VideoAd width={640} height={360} />
+          </div>
+          {/* Additional horizontal ad banner */}
+          <div className="flex justify-center">
+            <AdBanner slot="afterVideoAd" className="max-w-4xl w-full" />
+          </div>
         </div>
       </div>
 
-      {/* Bottom Banner Ad */}
+      {/* Bottom Banner Ad Section */}
       <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 py-8">
-        <div className="max-w-7xl mx-auto px-4">
-          <AdBanner slot="bottomBanner" className="mb-8" />
+        <div className="max-w-7xl mx-auto px-4 space-y-6">
+          <div className="text-center">
+            <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+          </div>
+          <AdBanner slot="bottomBanner" className="mb-4" />
+          {/* Additional multiplex ad for better coverage */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <AdBanner slot="bottomLeft" />
+            <AdBanner slot="bottomCenter" />
+            <AdBanner slot="bottomRight" />
+          </div>
         </div>
       </div>
 
@@ -282,23 +323,27 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Final CTA Section */}
-      <div className="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 text-white py-16 mt-16">
-        <div className="max-w-4xl mx-auto text-center px-4">
-          <h2 className="text-4xl font-bold mb-4">Ready to boost your productivity?</h2>
-          <p className="text-xl mb-8 opacity-90">
-            Join thousands of developers using our tools daily - completely free!
-          </p>
-          <a
-            href="#search"
-            onClick={(e) => {
-              e.preventDefault()
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }}
-            className="inline-block bg-white text-primary-600 px-8 py-4 rounded-full font-bold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-200"
-          >
-            Explore All Tools
-          </a>
+      {/* Premium Ad Section - Featured Placement */}
+      <div className="bg-gray-100 dark:bg-gray-800/70 py-12 mt-16 border-y-2 border-gray-200 dark:border-gray-700">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-6">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              Ready to boost your productivity?
+            </h3>
+            <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
+              Join thousands of developers using our tools daily - completely free!
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-500 uppercase tracking-wider mb-4">Advertisement</p>
+          </div>
+          {/* Large Format AdSense - Prime Location */}
+          <div className="flex justify-center mb-6">
+            <AdBanner slot="featuredAd" className="w-full max-w-4xl" />
+          </div>
+          {/* Additional Ad Units for Better Coverage */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <AdBanner slot="leftSideAd" />
+            <AdBanner slot="rightSideAd" />
+          </div>
         </div>
       </div>
 

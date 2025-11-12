@@ -258,6 +258,7 @@ export const toolCategories: ToolCategory[] = [
         name: 'QR Code Generator',
         description: 'Generate QR codes from text',
         category: 'generator-tools',
+        badge: 'BETA',
       },
       {
         slug: 'password-generator',
