@@ -4,9 +4,9 @@ export const toolCategories: ToolCategory[] = [
   // Most Powerful & Popular Tools First
   {
     slug: 'developer-tools',
-    name: '🚀 Developer Tools',
+    name: 'Developer Tools',
     description: 'Advanced development and coding tools',
-    icon: '💻',
+    icon: 'developer-tools',
     tools: [
       {
         slug: 'code-playground',
@@ -21,7 +21,7 @@ export const toolCategories: ToolCategory[] = [
     slug: 'text-tools',
     name: 'Text & Code Tools',
     description: 'Format, validate, and transform text and code',
-    icon: '📝',
+    icon: 'text-tools',
     tools: [
       {
         slug: 'json-formatter',
@@ -113,7 +113,7 @@ export const toolCategories: ToolCategory[] = [
     slug: 'security-tools',
     name: 'Security & Cryptography',
     description: 'Hash generation and password tools',
-    icon: '🔐',
+    icon: 'security-tools',
     tools: [
       {
         slug: 'hash-generator',
@@ -151,7 +151,7 @@ export const toolCategories: ToolCategory[] = [
     slug: 'encoding-tools',
     name: 'Encoding & Decoding',
     description: 'Encode and decode various formats',
-    icon: '🔤',
+    icon: 'encoding-tools',
     tools: [
       {
         slug: 'base64-encode',
@@ -195,7 +195,7 @@ export const toolCategories: ToolCategory[] = [
     slug: 'css-design-tools',
     name: 'CSS & Design Tools',
     description: 'Generate and customize CSS styles',
-    icon: '🎨',
+    icon: 'css-design-tools',
     tools: [
       {
         slug: 'gradient-generator',
@@ -245,7 +245,7 @@ export const toolCategories: ToolCategory[] = [
     slug: 'generator-tools',
     name: 'Generators',
     description: 'Generate UUIDs, QR codes, and more',
-    icon: '🎲',
+    icon: 'generator-tools',
     tools: [
       {
         slug: 'uuid-generator',
@@ -296,7 +296,7 @@ export const toolCategories: ToolCategory[] = [
     slug: 'image-tools',
     name: 'Image Tools',
     description: 'Powerful image manipulation and editing tools',
-    icon: '🖼️',
+    icon: 'image-tools',
     tools: [
       {
         slug: 'image-resizer',
@@ -340,7 +340,7 @@ export const toolCategories: ToolCategory[] = [
     slug: 'conversion-tools',
     name: 'Data Conversion',
     description: 'Convert between different data formats',
-    icon: '🔄',
+    icon: 'conversion-tools',
     tools: [
       {
         slug: 'unit-converter',
@@ -421,7 +421,7 @@ export const toolCategories: ToolCategory[] = [
     slug: 'time-tools',
     name: 'Time & Date Tools',
     description: 'Convert and format timestamps',
-    icon: '⏰',
+    icon: 'time-tools',
     tools: [
       {
         slug: 'timestamp-converter',

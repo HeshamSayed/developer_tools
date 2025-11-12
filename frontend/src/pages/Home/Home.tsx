@@ -8,6 +8,7 @@ import Logo from '@/components/Common/Logo'
 import { useFavorites } from '@/hooks/useFavorites'
 import { useToolHistory } from '@/hooks/useToolHistory'
 import { getToolBySlug } from '@/utils/toolsData'
+import { categoryIcons } from '@/components/Common/CategoryIcons'
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -157,7 +158,12 @@ export default function Home() {
           <div key={category.slug} className="category-section animate-fade-in-up" style={{ animationDelay: `${(categoryIndex + 2) * 100}ms` }}>
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3 mb-2">
-                <span className="text-3xl">{category.icon}</span>
+                <span className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-primary-100 to-accent-100 dark:from-primary-900/50 dark:to-accent-900/50 text-primary-600 dark:text-primary-400 shadow-sm">
+                  {(() => {
+                    const IconComponent = categoryIcons[category.icon as keyof typeof categoryIcons]
+                    return IconComponent ? <IconComponent className="w-7 h-7" /> : null
+                  })()}
+                </span>
                 {category.name}
               </h2>
               <p className="text-gray-600 dark:text-gray-400">
