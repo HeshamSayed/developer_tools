@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import CopyButton from '@/components/Common/CopyButton'
 import { useNotification } from '@/contexts/NotificationContext'
 
@@ -13,7 +13,7 @@ type RadialShape = 'circle' | 'ellipse'
 type RadialPosition = 'center' | 'top' | 'bottom' | 'left' | 'right' | 'top left' | 'top right' | 'bottom left' | 'bottom right'
 
 export default function GradientGenerator() {
-  const { showNotification } = useNotification()
+  const { showSuccess } = useNotification()
 
   const [colorStops, setColorStops] = useState<ColorStop[]>([
     { id: '1', color: '#667eea', position: 0 },
@@ -73,8 +73,6 @@ export default function GradientGenerator() {
 
   // Generate export code based on format
   const generateExportCode = () => {
-    const sortedStops = [...colorStops].sort((a, b) => a.position - b.position)
-
     switch (exportFormat) {
       case 'css':
         return gradientCSS
@@ -100,7 +98,7 @@ export default function GradientGenerator() {
   // Add color stop
   const addColorStop = () => {
     if (colorStops.length >= 10) {
-      showNotification('Maximum 10 color stops allowed', 'warning')
+      showSuccess('Maximum 10 color stops allowed')
       return
     }
 
@@ -121,7 +119,7 @@ export default function GradientGenerator() {
   // Remove color stop
   const removeColorStop = (id: string) => {
     if (colorStops.length <= 2) {
-      showNotification('Minimum 2 color stops required', 'warning')
+      showSuccess('Minimum 2 color stops required')
       return
     }
     setColorStops(colorStops.filter(stop => stop.id !== id))
@@ -151,25 +149,16 @@ export default function GradientGenerator() {
     setType(randomType)
     setColorStops(newStops)
     setAngle(Math.floor(Math.random() * 360))
-    showNotification('Random gradient generated!', 'success')
+    showSuccess('Random gradient generated!')
   }
 
   // Save to history
   const saveToHistory = () => {
     const newHistory = [gradientCSS, ...history.filter(h => h !== gradientCSS)].slice(0, 10)
     setHistory(newHistory)
-    showNotification('Saved to history', 'success')
+    showSuccess('Saved to history')
   }
 
-  // Load from history
-  const loadFromHistory = (cssCode: string) => {
-    try {
-      // Basic parsing - this is simplified
-      showNotification('History loaded (manual adjustment may be needed)', 'info')
-    } catch (error) {
-      showNotification('Could not load from history', 'error')
-    }
-  }
 
   // Preset gradients
   const presets = [
@@ -193,7 +182,7 @@ export default function GradientGenerator() {
       color: s.color,
       position: s.pos,
     })))
-    showNotification(`Loaded preset: ${preset.name}`, 'success')
+    showSuccess(`Loaded preset: ${preset.name}`)
   }
 
   return (

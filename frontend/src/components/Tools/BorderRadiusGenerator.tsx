@@ -5,7 +5,7 @@ import { useNotification } from '@/contexts/NotificationContext'
 type Unit = 'px' | '%' | 'rem' | 'em'
 
 export default function BorderRadiusGenerator() {
-  const { showNotification } = useNotification()
+  const { showSuccess } = useNotification()
 
   const [topLeft, setTopLeft] = useState(20)
   const [topRight, setTopRight] = useState(20)
@@ -25,7 +25,7 @@ export default function BorderRadiusGenerator() {
     setTopRight(0)
     setBottomRight(0)
     setBottomLeft(0)
-    showNotification('Reset all corners', 'success')
+    showSuccess('Reset all corners')
   }
 
   const setAll = (value: number) => {
@@ -97,7 +97,7 @@ export default function BorderRadiusGenerator() {
     setBottomRight(preset.br)
     setBottomLeft(preset.bl)
     setUnit(preset.unit as Unit)
-    showNotification(`Loaded preset: ${preset.name}`, 'success')
+    showSuccess(`Loaded preset: ${preset.name}`)
   }
 
   const getMaxValue = () => {

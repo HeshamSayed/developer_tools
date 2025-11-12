@@ -6,7 +6,7 @@ type Direction = 'up' | 'down' | 'left' | 'right' | 'top-left' | 'top-right' | '
 type TriangleType = 'isosceles' | 'right-angled' | 'equilateral'
 
 export default function CSSTriangleGenerator() {
-  const { showNotification } = useNotification()
+  const { showSuccess } = useNotification()
 
   const [direction, setDirection] = useState<Direction>('up')
   const [triangleType, setTriangleType] = useState<TriangleType>('isosceles')
@@ -148,7 +148,7 @@ export default function CSSTriangleGenerator() {
     setWidth(preset.w)
     setHeight(preset.h)
     setColor(preset.color)
-    showNotification(`Loaded preset: ${preset.name}`, 'success')
+    showSuccess(`Loaded preset: ${preset.name}`)
   }
 
   return (

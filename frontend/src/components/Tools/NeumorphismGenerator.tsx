@@ -5,7 +5,7 @@ import { useNotification } from '@/contexts/NotificationContext'
 type NeumorphismType = 'flat' | 'concave' | 'convex' | 'pressed'
 
 export default function NeumorphismGenerator() {
-  const { showNotification } = useNotification()
+  const { showSuccess } = useNotification()
 
   const [color, setColor] = useState('#e0e0e0')
   const [distance, setDistance] = useState(10)
@@ -72,7 +72,7 @@ export default function NeumorphismGenerator() {
     setBlur(preset.blur)
     setRadius(preset.radius)
     setType(preset.type)
-    showNotification(`Loaded preset: ${preset.name}`, 'success')
+    showSuccess(`Loaded preset: ${preset.name}`)
   }
 
   return (
