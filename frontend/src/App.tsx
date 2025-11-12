@@ -6,6 +6,7 @@ import ToolPage from './pages/ToolPage/ToolPage'
 import { NotificationProvider } from './contexts/NotificationContext'
 import ErrorBoundary from './components/Common/ErrorBoundary'
 import Loading from './components/Common/Loading'
+import CookieConsent from './components/Common/CookieConsent'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             </Routes>
           </Suspense>
         </Layout>
+        <CookieConsent />
       </NotificationProvider>
     </ErrorBoundary>
   )
