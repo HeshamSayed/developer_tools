@@ -67,6 +67,20 @@ END:VCARD`
         throw new Error('Please fill in the required fields')
       }
 
+      // Validate URL format for better UX
+      if (dataType === 'url') {
+        try {
+          const urlToValidate = textToEncode.startsWith('http') ? textToEncode : `https://${textToEncode}`
+          new URL(urlToValidate)
+          // Check if it looks like a valid domain
+          if (!urlToValidate.includes('.') && !urlToValidate.includes('localhost')) {
+            throw new Error('URL must contain a valid domain (e.g., example.com)')
+          }
+        } catch (urlError: any) {
+          throw new Error('Please enter a valid URL (e.g., google.com or https://example.com)')
+        }
+      }
+
       const options = {
         errorCorrectionLevel: errorCorrection,
         width: size,
@@ -462,6 +476,8 @@ END:VCARD`
         <ul className="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
           <li>The QR code is generated in real-time and updates automatically</li>
           <li>Scan the QR code with your phone camera or QR code scanner app</li>
+          <li><strong>For URLs:</strong> Most modern phone cameras (iOS 11+, Android 8+) will automatically show a notification to open the URL when you scan the QR code</li>
+          <li><strong>Scanning not working?</strong> Ensure you've selected the correct data type (URL/Website for links) and entered a valid, accessible URL (e.g., google.com, not localhost)</li>
           <li>Higher error correction allows the QR code to be scanned even if partially damaged</li>
           <li>WiFi QR codes allow instant network connection on most devices</li>
           <li>vCard QR codes allow quick contact information sharing</li>
