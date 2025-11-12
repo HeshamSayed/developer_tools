@@ -40,6 +40,16 @@ import LoremIpsumGenerator from '@/components/Tools/LoremIpsumGenerator'
 import BinaryHexConverter from '@/components/Tools/BinaryHexConverter'
 import ASCIIArtGenerator from '@/components/Tools/ASCIIArtGenerator'
 import SSLChecker from '@/components/Tools/SSLChecker'
+import GradientGenerator from '@/components/Tools/GradientGenerator'
+import BoxShadowGenerator from '@/components/Tools/BoxShadowGenerator'
+import BorderRadiusGenerator from '@/components/Tools/BorderRadiusGenerator'
+import CSSTriangleGenerator from '@/components/Tools/CSSTriangleGenerator'
+import GlassmorphismGenerator from '@/components/Tools/GlassmorphismGenerator'
+import NeumorphismGenerator from '@/components/Tools/NeumorphismGenerator'
+import TailwindConfigGenerator from '@/components/Tools/TailwindConfigGenerator'
+import StringCaseConverter from '@/components/Tools/StringCaseConverter'
+import UnitConverter from '@/components/Tools/UnitConverter'
+import EmailValidator from '@/components/Tools/EmailValidator'
 
 const toolComponents: Record<string, React.ComponentType> = {
   'json-formatter': JSONFormatter,
@@ -76,6 +86,16 @@ const toolComponents: Record<string, React.ComponentType> = {
   'binary-hex-converter': BinaryHexConverter,
   'ascii-art-generator': ASCIIArtGenerator,
   'ssl-checker': SSLChecker,
+  'gradient-generator': GradientGenerator,
+  'box-shadow-generator': BoxShadowGenerator,
+  'border-radius-generator': BorderRadiusGenerator,
+  'css-triangle-generator': CSSTriangleGenerator,
+  'glassmorphism-generator': GlassmorphismGenerator,
+  'neumorphism-generator': NeumorphismGenerator,
+  'tailwind-config-generator': TailwindConfigGenerator,
+  'string-case-converter': StringCaseConverter,
+  'unit-converter': UnitConverter,
+  'email-validator': EmailValidator,
 }
 
 export default function ToolPage() {

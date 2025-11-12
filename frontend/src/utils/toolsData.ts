@@ -2,11 +2,67 @@ import { ToolCategory } from '@/types'
 
 export const toolCategories: ToolCategory[] = [
   {
+    slug: 'css-design-tools',
+    name: 'CSS & Design Tools',
+    description: 'Generate and customize CSS styles',
+    icon: '🎨',
+    tools: [
+      {
+        slug: 'gradient-generator',
+        name: 'Gradient Generator',
+        description: 'Create beautiful CSS gradients with live preview',
+        category: 'css-design-tools',
+      },
+      {
+        slug: 'box-shadow-generator',
+        name: 'Box Shadow Generator',
+        description: 'Design and customize box shadows visually',
+        category: 'css-design-tools',
+      },
+      {
+        slug: 'border-radius-generator',
+        name: 'Border Radius Generator',
+        description: 'Create custom border radius shapes',
+        category: 'css-design-tools',
+      },
+      {
+        slug: 'css-triangle-generator',
+        name: 'CSS Triangle Generator',
+        description: 'Generate CSS triangles in any direction',
+        category: 'css-design-tools',
+      },
+      {
+        slug: 'glassmorphism-generator',
+        name: 'Glassmorphism Generator',
+        description: 'Create frosted glass effects for modern UIs',
+        category: 'css-design-tools',
+      },
+      {
+        slug: 'neumorphism-generator',
+        name: 'Neumorphism Generator',
+        description: 'Generate soft UI neumorphic designs',
+        category: 'css-design-tools',
+      },
+      {
+        slug: 'tailwind-config-generator',
+        name: 'Tailwind Config Generator',
+        description: 'Generate custom Tailwind CSS configuration',
+        category: 'css-design-tools',
+      },
+    ],
+  },
+  {
     slug: 'text-tools',
     name: 'Text & Code Tools',
     description: 'Format, validate, and transform text and code',
     icon: '📝',
     tools: [
+      {
+        slug: 'string-case-converter',
+        name: 'String Case Converter',
+        description: 'Convert strings between camelCase, snake_case, kebab-case, and more',
+        category: 'text-tools',
+      },
       {
         slug: 'json-formatter',
         name: 'JSON Formatter',
@@ -138,6 +194,12 @@ export const toolCategories: ToolCategory[] = [
     icon: '🔄',
     tools: [
       {
+        slug: 'unit-converter',
+        name: 'Unit Converter',
+        description: 'Convert between length, weight, and temperature units',
+        category: 'conversion-tools',
+      },
+      {
         slug: 'csv-to-json',
         name: 'CSV to JSON',
         description: 'Convert CSV data to JSON format',
@@ -185,6 +247,12 @@ export const toolCategories: ToolCategory[] = [
         slug: 'password-strength',
         name: 'Password Strength Checker',
         description: 'Analyze password strength and get suggestions',
+        category: 'security-tools',
+      },
+      {
+        slug: 'email-validator',
+        name: 'Email Validator',
+        description: 'Validate email addresses with detailed checks',
         category: 'security-tools',
       },
       {
