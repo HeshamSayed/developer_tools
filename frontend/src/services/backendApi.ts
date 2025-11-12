@@ -218,6 +218,68 @@ export const pdfTools = {
       success: boolean
       pdf: string
     }>('/api/pdf-tools/create-from-text/', data),
+
+  // Document Conversion APIs
+  pdfToWord: (data: { pdf: string }) =>
+    apiRequest<{
+      success: boolean
+      docx: string
+      filename: string
+      size: number
+    }>('/api/pdf-tools/pdf-to-word/', data),
+
+  wordToPdf: (data: { docx: string }) =>
+    apiRequest<{
+      success: boolean
+      pdf: string
+      filename: string
+      size: number
+    }>('/api/pdf-tools/word-to-pdf/', data),
+
+  pdfToExcel: (data: { pdf: string }) =>
+    apiRequest<{
+      success: boolean
+      excel: string
+      filename: string
+      sheets: number
+      size: number
+    }>('/api/pdf-tools/pdf-to-excel/', data),
+
+  excelToPdf: (data: { excel: string }) =>
+    apiRequest<{
+      success: boolean
+      pdf: string
+      filename: string
+      sheets_converted: number
+      size: number
+    }>('/api/pdf-tools/excel-to-pdf/', data),
+
+  generatePdf: (data: {
+    template_type: 'invoice' | 'report' | 'certificate'
+    data: any
+  }) =>
+    apiRequest<{
+      success: boolean
+      pdf: string
+      filename: string
+      template: string
+      size: number
+    }>('/api/pdf-tools/generate-pdf/', data),
+
+  createExcel: (data: {
+    sheets: Array<{
+      name: string
+      data: any[][]
+      has_header?: boolean
+    }>
+  }) =>
+    apiRequest<{
+      success: boolean
+      excel: string
+      filename: string
+      sheets: number
+      size: number
+    }>('/api/pdf-tools/create-excel/', data),
 }
 
 // ============================================

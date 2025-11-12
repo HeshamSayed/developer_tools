@@ -57,6 +57,12 @@ import ImageCropper from '@/components/Tools/ImageCropper'
 import ImageFlipper from '@/components/Tools/ImageFlipper'
 import MemeGenerator from '@/components/Tools/MemeGenerator'
 import ImageInfo from '@/components/Tools/ImageInfo'
+import PDFToWord from '@/components/Tools/PDFToWord'
+import WordToPDF from '@/components/Tools/WordToPDF'
+import PDFToExcel from '@/components/Tools/PDFToExcel'
+import ExcelToPDF from '@/components/Tools/ExcelToPDF'
+import ExcelGenerator from '@/components/Tools/ExcelGenerator'
+import PDFGenerator from '@/components/Tools/PDFGenerator'
 
 const toolComponents: Record<string, React.ComponentType> = {
   'json-formatter': JSONFormatter,
@@ -110,6 +116,12 @@ const toolComponents: Record<string, React.ComponentType> = {
   'image-flipper': ImageFlipper,
   'meme-generator': MemeGenerator,
   'image-info': ImageInfo,
+  'pdf-to-word': PDFToWord,
+  'word-to-pdf': WordToPDF,
+  'pdf-to-excel': PDFToExcel,
+  'excel-to-pdf': ExcelToPDF,
+  'excel-generator': ExcelGenerator,
+  'pdf-generator': PDFGenerator,
 }
 
 export default function ToolPage() {

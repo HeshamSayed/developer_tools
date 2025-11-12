@@ -382,3 +382,527 @@ def create_pdf_from_text(request):
         })
     except Exception as e:
         return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ============================================
+# ADVANCED DOCUMENT CONVERSION
+# ============================================
+
+@api_view(['POST'])
+def pdf_to_word(request):
+    """
+    Convert PDF to Word document (DOCX) using pdf2docx
+    Preserves formatting, images, tables, and text
+    """
+    try:
+        pdf_data = request.data.get('pdf')
+
+        # Convert base64 to PDF file
+        pdf_file = base64_to_pdf(pdf_data)
+
+        # Create temporary files for conversion
+        import tempfile
+        import os
+        from pdf2docx import Converter
+
+        with tempfile.NamedTemporaryFile(mode='wb', suffix='.pdf', delete=False) as pdf_temp:
+            pdf_temp.write(pdf_file.getvalue())
+            pdf_temp_path = pdf_temp.name
+
+        docx_temp_path = pdf_temp_path.replace('.pdf', '.docx')
+
+        try:
+            # Convert PDF to DOCX
+            cv = Converter(pdf_temp_path)
+            cv.convert(docx_temp_path)
+            cv.close()
+
+            # Read the DOCX file
+            with open(docx_temp_path, 'rb') as docx_file:
+                docx_bytes = docx_file.read()
+
+            # Convert to base64
+            docx_base64 = base64.b64encode(docx_bytes).decode('utf-8')
+
+            return Response({
+                'success': True,
+                'docx': docx_base64,
+                'filename': 'converted.docx',
+                'size': len(docx_bytes)
+            })
+
+        finally:
+            # Clean up temporary files
+            if os.path.exists(pdf_temp_path):
+                os.unlink(pdf_temp_path)
+            if os.path.exists(docx_temp_path):
+                os.unlink(docx_temp_path)
+
+    except Exception as e:
+        return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def word_to_pdf(request):
+    """
+    Convert Word document (DOCX) to PDF using python-docx and reportlab
+    Preserves basic formatting and structure
+    """
+    try:
+        docx_data = request.data.get('docx')
+
+        # Decode base64 DOCX
+        docx_bytes = base64.b64decode(docx_data.split(',')[1] if ',' in docx_data else docx_data)
+
+        import tempfile
+        import os
+        from docx import Document
+        from reportlab.lib.pagesizes import letter
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.units import inch
+        from reportlab.lib import colors
+
+        # Save DOCX to temp file
+        with tempfile.NamedTemporaryFile(mode='wb', suffix='.docx', delete=False) as docx_temp:
+            docx_temp.write(docx_bytes)
+            docx_temp_path = docx_temp.name
+
+        pdf_temp_path = docx_temp_path.replace('.docx', '.pdf')
+
+        try:
+            # Read DOCX
+            doc = Document(docx_temp_path)
+
+            # Create PDF
+            pdf_buffer = BytesIO()
+            pdf_doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+            styles = getSampleStyleSheet()
+            story = []
+
+            # Convert paragraphs
+            for para in doc.paragraphs:
+                if para.text.strip():
+                    # Determine style based on paragraph
+                    if para.style.name.startswith('Heading'):
+                        style = styles['Heading1']
+                    else:
+                        style = styles['BodyText']
+
+                    p = Paragraph(para.text, style)
+                    story.append(p)
+                    story.append(Spacer(1, 0.2*inch))
+
+            # Convert tables
+            for table in doc.tables:
+                data = []
+                for row in table.rows:
+                    row_data = [cell.text for cell in row.cells]
+                    data.append(row_data)
+
+                if data:
+                    t = Table(data)
+                    t.setStyle(TableStyle([
+                        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                        ('FONTSIZE', (0, 0), (-1, 0), 14),
+                        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                        ('GRID', (0, 0), (-1, -1), 1, colors.black)
+                    ]))
+                    story.append(t)
+                    story.append(Spacer(1, 0.3*inch))
+
+            # Build PDF
+            pdf_doc.build(story)
+
+            pdf_base64 = base64.b64encode(pdf_buffer.getvalue()).decode('utf-8')
+
+            return Response({
+                'success': True,
+                'pdf': pdf_base64,
+                'filename': 'converted.pdf',
+                'size': len(pdf_buffer.getvalue())
+            })
+
+        finally:
+            if os.path.exists(docx_temp_path):
+                os.unlink(docx_temp_path)
+
+    except Exception as e:
+        return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def pdf_to_excel(request):
+    """
+    Convert PDF to Excel (XLSX) by extracting tables using pdfplumber
+    """
+    try:
+        pdf_data = request.data.get('pdf')
+
+        pdf_file = base64_to_pdf(pdf_data)
+
+        import pandas as pd
+        import tempfile
+
+        all_tables = []
+
+        with pdfplumber.open(pdf_file) as pdf:
+            for page_num, page in enumerate(pdf.pages, 1):
+                tables = page.extract_tables()
+
+                for table_num, table in enumerate(tables, 1):
+                    if table:
+                        # Convert to DataFrame
+                        df = pd.DataFrame(table[1:], columns=table[0])
+                        all_tables.append({
+                            'sheet_name': f'Page{page_num}_Table{table_num}',
+                            'data': df
+                        })
+
+        if not all_tables:
+            return Response({
+                'success': False,
+                'error': 'No tables found in PDF'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create Excel file
+        excel_buffer = BytesIO()
+        with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
+            for table_info in all_tables:
+                sheet_name = table_info['sheet_name'][:31]  # Excel sheet name limit
+                table_info['data'].to_excel(writer, sheet_name=sheet_name, index=False)
+
+        excel_base64 = base64.b64encode(excel_buffer.getvalue()).decode('utf-8')
+
+        return Response({
+            'success': True,
+            'excel': excel_base64,
+            'filename': 'converted.xlsx',
+            'sheets': len(all_tables),
+            'size': len(excel_buffer.getvalue())
+        })
+
+    except Exception as e:
+        return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def excel_to_pdf(request):
+    """
+    Convert Excel (XLSX) to PDF using pandas and reportlab
+    """
+    try:
+        excel_data = request.data.get('excel')
+
+        # Decode base64 Excel
+        excel_bytes = base64.b64decode(excel_data.split(',')[1] if ',' in excel_data else excel_data)
+
+        import pandas as pd
+        from reportlab.lib.pagesizes import letter, landscape
+        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, PageBreak, Paragraph
+        from reportlab.lib.styles import getSampleStyleSheet
+        from reportlab.lib import colors
+
+        # Read Excel file
+        excel_buffer = BytesIO(excel_bytes)
+        excel_file = pd.ExcelFile(excel_buffer)
+
+        # Create PDF
+        pdf_buffer = BytesIO()
+        pdf_doc = SimpleDocTemplate(pdf_buffer, pagesize=landscape(letter))
+        styles = getSampleStyleSheet()
+        story = []
+
+        # Process each sheet
+        for sheet_name in excel_file.sheet_names:
+            df = pd.read_excel(excel_file, sheet_name=sheet_name)
+
+            # Add sheet title
+            title = Paragraph(f"<b>{sheet_name}</b>", styles['Heading1'])
+            story.append(title)
+            story.append(Spacer(1, 0.3*inch))
+
+            # Convert DataFrame to table data
+            data = [df.columns.tolist()] + df.fillna('').astype(str).values.tolist()
+
+            # Create table
+            table = Table(data)
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, -1), 8),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black)
+            ]))
+
+            story.append(table)
+            story.append(PageBreak())
+
+        # Build PDF
+        pdf_doc.build(story)
+
+        pdf_base64 = base64.b64encode(pdf_buffer.getvalue()).decode('utf-8')
+
+        return Response({
+            'success': True,
+            'pdf': pdf_base64,
+            'filename': 'converted.pdf',
+            'sheets_converted': len(excel_file.sheet_names),
+            'size': len(pdf_buffer.getvalue())
+        })
+
+    except Exception as e:
+        return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def generate_pdf_from_data(request):
+    """
+    Generate professional PDF from structured data with template support
+    Supports invoices, reports, certificates, etc.
+    """
+    try:
+        template_type = request.data.get('template_type', 'invoice')
+        data = request.data.get('data', {})
+
+        from reportlab.lib.pagesizes import letter, A4
+        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image as RLImage
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.units import inch
+        from reportlab.lib import colors
+        from reportlab.lib.enums import TA_CENTER, TA_RIGHT, TA_LEFT
+        from datetime import datetime
+
+        pdf_buffer = BytesIO()
+        pdf_doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+        styles = getSampleStyleSheet()
+        story = []
+
+        # Custom styles
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=24,
+            textColor=colors.HexColor('#2c3e50'),
+            spaceAfter=30,
+            alignment=TA_CENTER
+        )
+
+        if template_type == 'invoice':
+            # Invoice Template
+            title = Paragraph("INVOICE", title_style)
+            story.append(title)
+
+            # Invoice details
+            invoice_data = [
+                ['Invoice Number:', data.get('invoice_number', 'INV-001')],
+                ['Date:', data.get('date', datetime.now().strftime('%Y-%m-%d'))],
+                ['Due Date:', data.get('due_date', '')],
+            ]
+            invoice_table = Table(invoice_data, colWidths=[2*inch, 3*inch])
+            invoice_table.setStyle(TableStyle([
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ]))
+            story.append(invoice_table)
+            story.append(Spacer(1, 0.5*inch))
+
+            # Customer info
+            story.append(Paragraph(f"<b>Bill To:</b>", styles['Heading3']))
+            story.append(Paragraph(data.get('customer_name', ''), styles['Normal']))
+            story.append(Paragraph(data.get('customer_address', ''), styles['Normal']))
+            story.append(Spacer(1, 0.3*inch))
+
+            # Items table
+            items = data.get('items', [])
+            if items:
+                item_data = [['Description', 'Quantity', 'Unit Price', 'Total']]
+                total = 0
+                for item in items:
+                    qty = float(item.get('quantity', 0))
+                    price = float(item.get('price', 0))
+                    item_total = qty * price
+                    total += item_total
+                    item_data.append([
+                        item.get('description', ''),
+                        str(qty),
+                        f"${price:.2f}",
+                        f"${item_total:.2f}"
+                    ])
+
+                item_data.append(['', '', 'Subtotal:', f"${total:.2f}"])
+                tax_rate = float(data.get('tax_rate', 0))
+                tax = total * tax_rate / 100
+                item_data.append(['', '', f'Tax ({tax_rate}%):', f"${tax:.2f}"])
+                item_data.append(['', '', 'Total:', f"${total + tax:.2f}"])
+
+                items_table = Table(item_data, colWidths=[3*inch, 1*inch, 1.5*inch, 1.5*inch])
+                items_table.setStyle(TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                    ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, -1), 10),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                    ('BACKGROUND', (0, 1), (-1, -3), colors.beige),
+                    ('GRID', (0, 0), (-1, -3), 1, colors.black),
+                    ('FONTNAME', (2, -2), (-1, -1), 'Helvetica-Bold'),
+                    ('FONTSIZE', (2, -1), (-1, -1), 12),
+                ]))
+                story.append(items_table)
+
+        elif template_type == 'report':
+            # Report Template
+            title = Paragraph(data.get('title', 'Report'), title_style)
+            story.append(title)
+
+            story.append(Paragraph(f"<b>Date:</b> {datetime.now().strftime('%Y-%m-%d')}", styles['Normal']))
+            story.append(Paragraph(f"<b>Author:</b> {data.get('author', '')}", styles['Normal']))
+            story.append(Spacer(1, 0.3*inch))
+
+            # Sections
+            sections = data.get('sections', [])
+            for section in sections:
+                story.append(Paragraph(f"<b>{section.get('heading', '')}</b>", styles['Heading2']))
+                story.append(Paragraph(section.get('content', ''), styles['Normal']))
+                story.append(Spacer(1, 0.2*inch))
+
+        elif template_type == 'certificate':
+            # Certificate Template
+            story.append(Spacer(1, 1.5*inch))
+
+            cert_title = ParagraphStyle(
+                'CertTitle',
+                parent=styles['Heading1'],
+                fontSize=32,
+                textColor=colors.HexColor('#1a5490'),
+                spaceAfter=50,
+                alignment=TA_CENTER
+            )
+            story.append(Paragraph("CERTIFICATE OF COMPLETION", cert_title))
+
+            story.append(Spacer(1, 0.5*inch))
+            story.append(Paragraph(f"This certifies that", styles['Normal']))
+            story.append(Spacer(1, 0.3*inch))
+
+            name_style = ParagraphStyle(
+                'NameStyle',
+                parent=styles['Heading1'],
+                fontSize=28,
+                textColor=colors.HexColor('#2c3e50'),
+                spaceAfter=30,
+                alignment=TA_CENTER
+            )
+            story.append(Paragraph(data.get('recipient_name', ''), name_style))
+
+            story.append(Paragraph(f"has successfully completed", styles['Normal']))
+            story.append(Spacer(1, 0.3*inch))
+            story.append(Paragraph(data.get('course_name', ''), styles['Heading2']))
+            story.append(Spacer(1, 0.5*inch))
+            story.append(Paragraph(f"Date: {datetime.now().strftime('%B %d, %Y')}", styles['Normal']))
+
+        # Build PDF
+        pdf_doc.build(story)
+
+        pdf_base64 = base64.b64encode(pdf_buffer.getvalue()).decode('utf-8')
+
+        return Response({
+            'success': True,
+            'pdf': pdf_base64,
+            'filename': f'{template_type}.pdf',
+            'template': template_type,
+            'size': len(pdf_buffer.getvalue())
+        })
+
+    except Exception as e:
+        return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def create_excel_file(request):
+    """
+    Create Excel file from data with formatting and multiple sheets
+    """
+    try:
+        sheets_data = request.data.get('sheets', [])
+
+        import xlsxwriter
+
+        excel_buffer = BytesIO()
+        workbook = xlsxwriter.Workbook(excel_buffer, {'in_memory': True})
+
+        # Define formats
+        header_format = workbook.add_format({
+            'bold': True,
+            'bg_color': '#4472C4',
+            'font_color': 'white',
+            'align': 'center',
+            'valign': 'vcenter',
+            'border': 1
+        })
+
+        cell_format = workbook.add_format({
+            'border': 1,
+            'align': 'left',
+            'valign': 'vcenter'
+        })
+
+        number_format = workbook.add_format({
+            'border': 1,
+            'num_format': '#,##0.00'
+        })
+
+        for sheet_data in sheets_data:
+            sheet_name = sheet_data.get('name', 'Sheet1')
+            data = sheet_data.get('data', [])
+            has_header = sheet_data.get('has_header', True)
+
+            worksheet = workbook.add_worksheet(sheet_name)
+
+            if data:
+                # Write header
+                if has_header and len(data) > 0:
+                    for col, header in enumerate(data[0]):
+                        worksheet.write(0, col, header, header_format)
+                    start_row = 1
+                    data_rows = data[1:]
+                else:
+                    start_row = 0
+                    data_rows = data
+
+                # Write data
+                for row_idx, row in enumerate(data_rows, start=start_row):
+                    for col_idx, cell_value in enumerate(row):
+                        # Try to detect numbers
+                        try:
+                            num_value = float(cell_value)
+                            worksheet.write(row_idx, col_idx, num_value, number_format)
+                        except (ValueError, TypeError):
+                            worksheet.write(row_idx, col_idx, str(cell_value), cell_format)
+
+                # Auto-fit columns
+                for col_idx in range(len(data[0]) if data else 0):
+                    worksheet.set_column(col_idx, col_idx, 15)
+
+        workbook.close()
+
+        excel_base64 = base64.b64encode(excel_buffer.getvalue()).decode('utf-8')
+
+        return Response({
+            'success': True,
+            'excel': excel_base64,
+            'filename': 'generated.xlsx',
+            'sheets': len(sheets_data),
+            'size': len(excel_buffer.getvalue())
+        })
+
+    except Exception as e:
+        return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
