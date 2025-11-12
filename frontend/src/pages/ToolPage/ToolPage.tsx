@@ -143,6 +143,48 @@ export default function ToolPage() {
     )
   }
 
+  // Special layout for Code Playground - full screen with ads at top/bottom
+  if (toolSlug === 'code-playground') {
+    return (
+      <div className="flex flex-col h-screen">
+        {/* Compact Header with Ads */}
+        <div className="flex-shrink-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+          <div className="px-4 py-2 flex items-center justify-between">
+            <div>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                {tool.name}
+              </h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {tool.description}
+              </p>
+            </div>
+            <button
+              onClick={handleToggleFavorite}
+              className={`flex-shrink-0 p-2 rounded-lg border transition-all ${
+                isToolFavorite
+                  ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-700 text-yellow-500'
+                  : 'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-400'
+              }`}
+              title={isToolFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            >
+              <svg className="w-5 h-5" fill={isToolFavorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+              </svg>
+            </button>
+          </div>
+          {/* Top Ad Banner */}
+          <AdBanner slot="topBanner" className="px-4 pb-2" />
+        </div>
+
+        {/* Full Height Code Playground */}
+        <div className="flex-1 overflow-hidden">
+          <ToolComponent />
+        </div>
+      </div>
+    )
+  }
+
+  // Default layout for other tools
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Top Banner Ad */}
