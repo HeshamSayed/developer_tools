@@ -4,6 +4,7 @@ import { toolCategories } from '@/utils/toolsData'
 import AdBanner from '@/components/Ads/AdBanner'
 import VideoAd from '@/components/Ads/VideoAd'
 import PopupAd from '@/components/Ads/PopupAd'
+import Logo from '@/components/Common/Logo'
 import { useFavorites } from '@/hooks/useFavorites'
 import { useToolHistory } from '@/hooks/useToolHistory'
 import { getToolBySlug } from '@/utils/toolsData'
@@ -42,13 +43,18 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section - Professional Design */}
         <div className="text-center mb-12 animate-fade-in-up">
+          {/* Logo Center Piece */}
+          <div className="flex justify-center mb-8">
+            <Logo size="xl" showText={false} className="animate-float" />
+          </div>
+
           <div className="inline-block mb-4 px-6 py-3 bg-gradient-to-r from-primary-50 via-accent-50 to-primary-50 dark:from-primary-900/30 dark:via-accent-900/30 dark:to-primary-900/30 rounded-full border-2 border-primary-200 dark:border-primary-700 shadow-lg">
             <span className="text-sm font-bold bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent animate-pulse">
               ⚡ {totalTools}+ Professional Developer Tools - 100% Free
             </span>
           </div>
-          <h1 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent mb-6 leading-tight tracking-tight">
-            Developer Tools
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent mb-6 leading-tight tracking-tight">
+            DevTools Pro Suite
           </h1>
           <p className="text-2xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto mb-4 font-medium">
             Powerful, Fast & Professional Online Tools

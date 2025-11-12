@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import Logo from '@/components/Common/Logo'
 
 export default function Header() {
   const [darkMode, setDarkMode] = useState(false)
@@ -31,15 +32,8 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Title */}
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-              </svg>
-            </div>
-            <span className="text-xl font-bold text-gray-900 dark:text-white">
-              DevTools
-            </span>
+          <Link to="/" className="hover:opacity-80 transition-opacity">
+            <Logo size="sm" showText={true} />
           </Link>
 
           {/* Desktop Navigation */}
