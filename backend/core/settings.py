@@ -31,6 +31,12 @@ INSTALLED_APPS = [
     'tools',
     'analytics',
     'api',
+    # New Python-powered tool apps
+    'image_tools',
+    'pdf_tools',
+    'data_tools',
+    'code_tools',
+    'ml_tools',
 ]
 
 MIDDLEWARE = [
