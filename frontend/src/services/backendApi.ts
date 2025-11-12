@@ -243,6 +243,7 @@ export const pdfTools = {
       filename: string
       sheets: number
       size: number
+      error?: string
     }>('/api/pdf-tools/pdf-to-excel/', data),
 
   excelToPdf: (data: { excel: string }) =>
