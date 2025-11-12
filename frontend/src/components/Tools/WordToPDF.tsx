@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { pdfTools, fileToBase64 } from '@/services/backendApi'
+import { submitAndPoll, TaskStatus, getProgressPercentage } from '@/utils/asyncTasks'
 
 export default function WordToPDF() {
   const [docxFile, setDocxFile] = useState<File | null>(null)
@@ -7,6 +8,8 @@ export default function WordToPDF() {
   const [converting, setConverting] = useState(false)
   const [result, setResult] = useState<{ pdf: string; filename: string; size: number } | null>(null)
   const [error, setError] = useState<string>('')
+  const [taskStatus, setTaskStatus] = useState<TaskStatus | null>(null)
+  const [progress, setProgress] = useState<number>(0)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -18,6 +21,7 @@ export default function WordToPDF() {
       setDocxFile(file)
       setError('')
       setResult(null)
+      setTaskStatus(null)
     }
   }
 
@@ -29,16 +33,32 @@ export default function WordToPDF() {
 
     setConverting(true)
     setError('')
+    setResult(null)
+    setProgress(0)
 
     try {
       const docxBase64 = await fileToBase64(docxFile)
-      const response = await pdfTools.wordToPdf({ docx: docxBase64 })
 
-      if (response.success) {
+      // Submit async task and poll for completion
+      const finalResult = await submitAndPoll<any>(
+        () => pdfTools.wordToPdfAsync({ docx: docxBase64 }),
+        {
+          pollInterval: 2000, // Poll every 2 seconds
+          onProgress: (status: TaskStatus) => {
+            setTaskStatus(status)
+            setProgress(getProgressPercentage(status))
+          },
+          onError: (errorMsg: string) => {
+            setError(errorMsg)
+          }
+        }
+      )
+
+      if (finalResult.success) {
         setResult({
-          pdf: response.pdf,
-          filename: response.filename,
-          size: response.size
+          pdf: finalResult.pdf,
+          filename: finalResult.filename,
+          size: finalResult.size
         })
       } else {
         setError('Conversion failed')
@@ -119,6 +139,7 @@ export default function WordToPDF() {
               type="text"
               value={filename}
               onChange={(e) => setFilename(e.target.value)}
+              disabled={converting}
               placeholder="Enter filename (without extension)"
               className="input w-full"
             />
@@ -126,6 +147,32 @@ export default function WordToPDF() {
               File will be saved as: {filename}{filename.toLowerCase().endsWith('.pdf') ? '' : '.pdf'}
             </p>
           </div>
+
+          {/* Progress Bar (shown during conversion) */}
+          {converting && taskStatus && (
+            <div className="p-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <div className="flex items-center mb-2">
+                <svg className="animate-spin h-5 w-5 text-blue-600 dark:text-blue-400 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span className="text-blue-800 dark:text-blue-300 font-medium">
+                  {taskStatus.message}
+                </span>
+              </div>
+
+              {/* Progress bar */}
+              <div className="w-full bg-blue-200 dark:bg-blue-900 rounded-full h-2.5 overflow-hidden">
+                <div
+                  className="bg-blue-600 dark:bg-blue-400 h-2.5 rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+              <p className="text-xs text-blue-600 dark:text-blue-400 mt-1 text-right">
+                {progress}%
+              </p>
+            </div>
+          )}
 
           {/* Convert Button */}
           <button
@@ -154,25 +201,28 @@ export default function WordToPDF() {
           )}
 
           {/* Success Result */}
-          {result && (
-            <div className="p-6 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg">
+          {result && !converting && (
+            <div className="p-6 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg animate-fade-in">
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-green-800 dark:text-green-300 mb-2">
-                    ✅ Conversion Successful!
+                    ✅ Conversion Complete!
                   </h3>
                   <p className="text-green-700 dark:text-green-400 text-sm mb-1">
-                    Filename: {result.filename}
+                    Your file is ready to download
                   </p>
-                  <p className="text-green-700 dark:text-green-400 text-sm">
+                  <p className="text-green-600 dark:text-green-500 text-xs">
                     Size: {formatFileSize(result.size)}
                   </p>
                 </div>
                 <button
                   onClick={handleDownload}
-                  className="btn-primary"
+                  className="btn-primary flex items-center gap-2"
                 >
-                  💾 Download PDF
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Download PDF
                 </button>
               </div>
             </div>
