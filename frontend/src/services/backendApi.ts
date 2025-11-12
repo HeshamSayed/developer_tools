@@ -281,6 +281,108 @@ export const pdfTools = {
       sheets: number
       size: number
     }>('/api/pdf-tools/create-excel/', data),
+
+  // ============================================
+  // ASYNC ENDPOINTS (Celery-powered)
+  // ============================================
+
+  // Async PDF to Word
+  pdfToWordAsync: (data: { pdf: string }) =>
+    apiRequest<{
+      success: boolean
+      task_id: string
+      status: string
+      message: string
+      status_url: string
+    }>('/api/pdf-tools/async/pdf-to-word/', data),
+
+  // Async Word to PDF
+  wordToPdfAsync: (data: { docx: string }) =>
+    apiRequest<{
+      success: boolean
+      task_id: string
+      status: string
+      message: string
+      status_url: string
+    }>('/api/pdf-tools/async/word-to-pdf/', data),
+
+  // Async PDF to Excel
+  pdfToExcelAsync: (data: { pdf: string }) =>
+    apiRequest<{
+      success: boolean
+      task_id: string
+      status: string
+      message: string
+      status_url: string
+    }>('/api/pdf-tools/async/pdf-to-excel/', data),
+
+  // Async Excel to PDF
+  excelToPdfAsync: (data: { excel: string }) =>
+    apiRequest<{
+      success: boolean
+      task_id: string
+      status: string
+      message: string
+      status_url: string
+    }>('/api/pdf-tools/async/excel-to-pdf/', data),
+
+  // Async PDF Generation
+  generatePdfAsync: (data: {
+    template_type: 'invoice' | 'report' | 'certificate'
+    data: any
+  }) =>
+    apiRequest<{
+      success: boolean
+      task_id: string
+      status: string
+      message: string
+      status_url: string
+    }>('/api/pdf-tools/async/generate-pdf/', data),
+
+  // Async Excel Creation
+  createExcelAsync: (data: {
+    sheets: Array<{
+      name: string
+      data: any[][]
+      has_header?: boolean
+    }>
+  }) =>
+    apiRequest<{
+      success: boolean
+      task_id: string
+      status: string
+      message: string
+      status_url: string
+    }>('/api/pdf-tools/async/create-excel/', data),
+
+  // Task Status Check
+  getTaskStatus: async (taskId: string) => {
+    const response = await fetch(`${BACKEND_URL}/api/pdf-tools/task-status/${taskId}/`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch task status')
+    }
+    return response.json()
+  },
+
+  // Cancel Task
+  cancelTask: async (taskId: string) => {
+    const response = await fetch(`${BACKEND_URL}/api/pdf-tools/cancel-task/${taskId}/`, {
+      method: 'DELETE'
+    })
+    if (!response.ok) {
+      throw new Error('Failed to cancel task')
+    }
+    return response.json()
+  },
+
+  // Queue Status
+  getQueueStatus: async () => {
+    const response = await fetch(`${BACKEND_URL}/api/pdf-tools/queue-status/`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch queue status')
+    }
+    return response.json()
+  },
 }
 
 // ============================================
