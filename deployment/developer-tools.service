@@ -1,0 +1,33 @@
+[Unit]
+Description=Developer Tools Platform - Django Backend
+After=network.target postgresql.service
+
+[Service]
+Type=notify
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/developer_tools/backend
+Environment="PATH=/var/www/developer_tools/venv/bin"
+EnvironmentFile=/var/www/developer_tools/.env
+ExecStart=/var/www/developer_tools/venv/bin/gunicorn \
+    --workers 4 \
+    --bind unix:/run/developer_tools.sock \
+    --timeout 120 \
+    --access-logfile /var/log/developer_tools/access.log \
+    --error-logfile /var/log/developer_tools/error.log \
+    --log-level info \
+    core.wsgi:application
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/developer_tools /var/www/developer_tools/backend/logs
+
+[Install]
+WantedBy=multi-user.target

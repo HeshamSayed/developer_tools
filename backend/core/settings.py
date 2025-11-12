@@ -224,3 +224,57 @@ MAX_UPLOAD_SIZE = 10485760  # 10MB
 # Input Validation
 MAX_JSON_SIZE = 1048576  # 1MB for JSON payloads
 MAX_TEXT_LENGTH = 1000000  # 1 million characters for text inputs
+
+# Environment Variable Validation
+def validate_environment_variables():
+    """
+    Validate that required environment variables are set
+    """
+    import sys
+
+    # Required variables for production
+    if not DEBUG:
+        required_vars = {
+            'SECRET_KEY': 'Django secret key for cryptographic signing',
+            'ALLOWED_HOSTS': 'Comma-separated list of allowed hostnames',
+            'DB_PASSWORD': 'Database password',
+        }
+
+        missing_vars = []
+        weak_vars = []
+
+        for var, description in required_vars.items():
+            value = os.environ.get(var)
+            if not value:
+                missing_vars.append(f"  - {var}: {description}")
+            elif var == 'SECRET_KEY' and (value == 'django-insecure-dev-key-change-in-production' or len(value) < 50):
+                weak_vars.append(f"  - {var}: Must be at least 50 characters and not use default value")
+
+        if missing_vars or weak_vars:
+            error_msg = "\n" + "="*80 + "\n"
+            error_msg += "ENVIRONMENT VARIABLE VALIDATION FAILED\n"
+            error_msg += "="*80 + "\n"
+
+            if missing_vars:
+                error_msg += "\nMissing required environment variables:\n"
+                error_msg += "\n".join(missing_vars)
+
+            if weak_vars:
+                error_msg += "\n\nWeak or insecure environment variables:\n"
+                error_msg += "\n".join(weak_vars)
+
+            error_msg += "\n\nPlease set these in your environment or .env file before running in production."
+            error_msg += "\nSee .env.example for reference.\n"
+            error_msg += "="*80 + "\n"
+
+            print(error_msg, file=sys.stderr)
+            sys.exit(1)
+
+    # Optional: Warn about recommended variables
+    recommended_vars = ['CORS_ALLOWED_ORIGINS']
+    for var in recommended_vars:
+        if not os.environ.get(var):
+            print(f"Warning: {var} not set. Using default configuration.", file=sys.stderr)
+
+# Run validation when settings module is loaded
+validate_environment_variables()
