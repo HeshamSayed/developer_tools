@@ -26,18 +26,20 @@ export default function TermsOfService() {
             </h2>
             <div className="space-y-3 text-gray-800 dark:text-gray-200">
               <p className="text-lg font-semibold">
-                <strong>YOUR DATA STAYS WITH YOU</strong>
+                <strong>WE DO NOT STORE YOUR DATA</strong>
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
-                <li><strong>Client-side processing only</strong> - All tools run entirely in your browser</li>
-                <li><strong>Zero data collection</strong> - We never collect, store, or see your tool inputs</li>
-                <li><strong>No external data sharing</strong> - Your data is never shared with any external partners or third parties</li>
-                <li><strong>Complete confidentiality</strong> - Process sensitive data with confidence</li>
-                <li><strong>No server transmission</strong> - Your files and inputs never leave your device</li>
+                <li><strong>Client-side processing</strong> - Most tools run entirely in your browser without server communication</li>
+                <li><strong>Backend processing when needed</strong> - Some advanced tools (PDF/Excel conversions) use our servers for processing</li>
+                <li><strong>Zero data retention</strong> - We do NOT store, save, or keep your data after processing</li>
+                <li><strong>No external data sharing</strong> - Your data is NEVER shared with external partners or third parties</li>
+                <li><strong>Temporary processing only</strong> - Server-processed data is immediately deleted after completion</li>
+                <li><strong>Complete confidentiality</strong> - Your information is never logged or tracked</li>
               </ul>
               <p className="text-sm italic mt-4 text-gray-700 dark:text-gray-300">
-                We only collect anonymous usage statistics (which tools are used, page views) to improve our service.
-                We display advertisements via Google AdSense, but your tool data remains completely private.
+                <strong>Important:</strong> While some tools temporarily send data to our backend for processing (like document conversions),
+                we do NOT store your information. All data is immediately discarded after processing. We only collect anonymous
+                usage statistics (which tools are used, page views) to improve our service.
               </p>
             </div>
           </section>

@@ -22,22 +22,24 @@ export default function PrivacyPolicy() {
               <svg className="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              Zero Data Collection Policy
+              Zero Data Storage Policy
             </h2>
             <div className="space-y-3 text-gray-800 dark:text-gray-200">
               <p className="text-lg font-semibold">
-                <strong>WE DO NOT COLLECT, STORE, OR SHARE YOUR DATA</strong>
+                <strong>WE DO NOT STORE OR SHARE YOUR DATA</strong>
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
-                <li><strong>All tool processing happens entirely in your browser</strong> - Your data never leaves your device</li>
-                <li><strong>Zero data collection</strong> - We do not collect, store, or process any data you input into our tools</li>
-                <li><strong>No external sharing</strong> - We do not share any user data with external partners or third parties</li>
-                <li><strong>Complete privacy</strong> - Your files, text, and input remain 100% private and secure</li>
-                <li><strong>No tracking of tool inputs</strong> - We never see or store what you process through our tools</li>
+                <li><strong>Most tools process entirely in your browser</strong> - Data stays on your device for client-side tools</li>
+                <li><strong>Some tools use backend processing</strong> - Document conversions (PDF, Word, Excel) are processed on our servers for better performance</li>
+                <li><strong>Zero data retention</strong> - We do NOT store, save, or keep any data you submit after processing is complete</li>
+                <li><strong>No external sharing</strong> - We NEVER share your data with external partners or third parties</li>
+                <li><strong>Temporary processing only</strong> - Backend-processed data is immediately discarded after conversion</li>
+                <li><strong>No logging of tool inputs</strong> - We don't log, track, or save what you process through our tools</li>
               </ul>
               <p className="text-sm italic mt-4 text-gray-700 dark:text-gray-300">
-                Note: We only collect anonymous analytics (page views, tool usage statistics) and display advertisements via Google AdSense.
-                Your actual tool data and inputs are never collected, stored, or transmitted.
+                <strong>Summary:</strong> While some advanced tools (PDF/Excel conversions) temporarily use our backend servers for processing,
+                we do NOT store your information. All data is immediately deleted after processing. We only collect anonymous
+                analytics (page views, tool usage counts) and display advertisements via Google AdSense.
               </p>
             </div>
           </section>
