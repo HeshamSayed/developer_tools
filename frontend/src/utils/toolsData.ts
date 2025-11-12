@@ -321,6 +321,20 @@ export const toolCategories: ToolCategory[] = [
       },
     ],
   },
+  {
+    slug: 'developer-tools',
+    name: 'Developer Tools',
+    description: 'Advanced development and coding tools',
+    icon: '💻',
+    tools: [
+      {
+        slug: 'code-playground',
+        name: 'Code Playground',
+        description: 'Full-featured code editor with file system, live preview, and templates',
+        category: 'developer-tools',
+      },
+    ],
+  },
 ]
 
 export const getAllTools = () => {

@@ -50,6 +50,7 @@ import TailwindConfigGenerator from '@/components/Tools/TailwindConfigGenerator'
 import StringCaseConverter from '@/components/Tools/StringCaseConverter'
 import UnitConverter from '@/components/Tools/UnitConverter'
 import EmailValidator from '@/components/Tools/EmailValidator'
+import CodePlayground from '@/components/Tools/CodePlayground'
 
 const toolComponents: Record<string, React.ComponentType> = {
   'json-formatter': JSONFormatter,
@@ -96,6 +97,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'string-case-converter': StringCaseConverter,
   'unit-converter': UnitConverter,
   'email-validator': EmailValidator,
+  'code-playground': CodePlayground,
 }
 
 export default function ToolPage() {
