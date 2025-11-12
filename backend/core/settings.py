@@ -155,6 +155,76 @@ CACHES = {
     }
 }
 
+# ==============================================================================
+# CELERY CONFIGURATION
+# ==============================================================================
+# Celery Configuration Options
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'amqp://guest:guest@localhost:5672//')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+
+# Task serialization
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ENABLE_UTC = True
+
+# Task result settings
+CELERY_RESULT_EXPIRES = 3600  # Results expire after 1 hour
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60  # Hard time limit: 30 minutes
+CELERY_TASK_SOFT_TIME_LIMIT = 25 * 60  # Soft time limit: 25 minutes
+
+# Worker settings
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1  # Workers will grab one task at a time
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 100  # Restart worker after 100 tasks (memory leak prevention)
+
+# Task retry settings
+CELERY_TASK_ACKS_LATE = True  # Acknowledge task after completion
+CELERY_TASK_REJECT_ON_WORKER_LOST = True
+CELERY_TASK_DEFAULT_RETRY_DELAY = 60  # Retry after 60 seconds
+CELERY_TASK_MAX_RETRIES = 3
+
+# Beat schedule (for periodic tasks)
+CELERY_BEAT_SCHEDULE = {
+    'cleanup-old-task-results': {
+        'task': 'pdf_tools.tasks.cleanup_old_results',
+        'schedule': 3600.0,  # Run every hour
+    },
+}
+
+# Task routes (route heavy tasks to specific queues)
+CELERY_TASK_ROUTES = {
+    'pdf_tools.tasks.*': {'queue': 'pdf_processing'},
+    'image_tools.tasks.*': {'queue': 'image_processing'},
+    'data_tools.tasks.*': {'queue': 'data_processing'},
+}
+
+# Queue configuration
+CELERY_TASK_DEFAULT_QUEUE = 'default'
+CELERY_TASK_QUEUES = {
+    'default': {
+        'exchange': 'default',
+        'routing_key': 'default',
+    },
+    'pdf_processing': {
+        'exchange': 'pdf',
+        'routing_key': 'pdf.processing',
+    },
+    'image_processing': {
+        'exchange': 'image',
+        'routing_key': 'image.processing',
+    },
+    'data_processing': {
+        'exchange': 'data',
+        'routing_key': 'data.processing',
+    },
+}
+
+# Monitoring
+CELERY_SEND_TASK_SENT_EVENT = True
+CELERY_SEND_TASK_ERROR_EMAILS = not DEBUG
+
 # Logging configuration
 LOGGING = {
     'version': 1,

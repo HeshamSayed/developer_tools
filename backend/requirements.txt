@@ -50,3 +50,14 @@ bleach==6.1.0
 requests==2.31.0
 beautifulsoup4==4.12.3
 lxml==5.1.0
+
+# Async Task Queue & Message Broker
+celery==5.3.6
+redis==5.0.1
+kombu==5.3.5
+vine==5.1.0
+amqp==5.2.0
+
+# Task Monitoring & Management
+flower==2.0.1
+celery-progress==0.3
