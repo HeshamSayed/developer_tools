@@ -16,6 +16,32 @@ export default function TermsOfService() {
         </div>
 
         <div className="prose dark:prose-invert max-w-none">
+          {/* IMPORTANT DATA PRIVACY NOTICE */}
+          <section className="mb-8 p-6 bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-500 dark:border-blue-700 rounded-lg">
+            <h2 className="text-2xl font-bold text-blue-900 dark:text-blue-100 mb-4 flex items-center">
+              <svg className="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+              Privacy-First Service
+            </h2>
+            <div className="space-y-3 text-gray-800 dark:text-gray-200">
+              <p className="text-lg font-semibold">
+                <strong>YOUR DATA STAYS WITH YOU</strong>
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li><strong>Client-side processing only</strong> - All tools run entirely in your browser</li>
+                <li><strong>Zero data collection</strong> - We never collect, store, or see your tool inputs</li>
+                <li><strong>No external data sharing</strong> - Your data is never shared with any external partners or third parties</li>
+                <li><strong>Complete confidentiality</strong> - Process sensitive data with confidence</li>
+                <li><strong>No server transmission</strong> - Your files and inputs never leave your device</li>
+              </ul>
+              <p className="text-sm italic mt-4 text-gray-700 dark:text-gray-300">
+                We only collect anonymous usage statistics (which tools are used, page views) to improve our service.
+                We display advertisements via Google AdSense, but your tool data remains completely private.
+              </p>
+            </div>
+          </section>
+
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
               1. Acceptance of Terms

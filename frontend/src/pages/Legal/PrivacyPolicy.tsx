@@ -16,6 +16,32 @@ export default function PrivacyPolicy() {
         </div>
 
         <div className="prose dark:prose-invert max-w-none">
+          {/* IMPORTANT DATA PRIVACY NOTICE */}
+          <section className="mb-8 p-6 bg-green-50 dark:bg-green-900/20 border-2 border-green-500 dark:border-green-700 rounded-lg">
+            <h2 className="text-2xl font-bold text-green-900 dark:text-green-100 mb-4 flex items-center">
+              <svg className="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              Zero Data Collection Policy
+            </h2>
+            <div className="space-y-3 text-gray-800 dark:text-gray-200">
+              <p className="text-lg font-semibold">
+                <strong>WE DO NOT COLLECT, STORE, OR SHARE YOUR DATA</strong>
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li><strong>All tool processing happens entirely in your browser</strong> - Your data never leaves your device</li>
+                <li><strong>Zero data collection</strong> - We do not collect, store, or process any data you input into our tools</li>
+                <li><strong>No external sharing</strong> - We do not share any user data with external partners or third parties</li>
+                <li><strong>Complete privacy</strong> - Your files, text, and input remain 100% private and secure</li>
+                <li><strong>No tracking of tool inputs</strong> - We never see or store what you process through our tools</li>
+              </ul>
+              <p className="text-sm italic mt-4 text-gray-700 dark:text-gray-300">
+                Note: We only collect anonymous analytics (page views, tool usage statistics) and display advertisements via Google AdSense.
+                Your actual tool data and inputs are never collected, stored, or transmitted.
+              </p>
+            </div>
+          </section>
+
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
               1. Introduction

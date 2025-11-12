@@ -16,11 +16,29 @@ async function apiRequest<T>(endpoint: string, data: any): Promise<T> {
   })
 
   if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || 'API request failed')
+    // Try to parse as JSON first, fall back to text if it fails
+    try {
+      const error = await response.json()
+      throw new Error(error.error || error.message || 'API request failed')
+    } catch (jsonError) {
+      // If JSON parsing fails, get the text (likely HTML error page)
+      const text = await response.text()
+      // Check if it's HTML
+      if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+        throw new Error(`Server error (${response.status}): The backend server encountered an error. Please check server logs.`)
+      }
+      throw new Error(`API request failed: ${text.substring(0, 100)}`)
+    }
   }
 
-  return response.json()
+  // Try to parse response as JSON
+  try {
+    return await response.json()
+  } catch (parseError) {
+    const text = await response.text()
+    console.error('Failed to parse response:', text)
+    throw new Error('Invalid JSON response from server')
+  }
 }
 
 // Helper to convert File to base64

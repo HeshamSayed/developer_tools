@@ -1,17 +1,16 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { toolCategories } from '@/utils/toolsData'
 import AdBanner from '@/components/Ads/AdBanner'
 import VideoAd from '@/components/Ads/VideoAd'
 import PopupAd from '@/components/Ads/PopupAd'
-import Logo from '@/components/Common/Logo'
 import { useFavorites } from '@/hooks/useFavorites'
 import { useToolHistory } from '@/hooks/useToolHistory'
 import { getToolBySlug } from '@/utils/toolsData'
 import { categoryIcons } from '@/components/Common/CategoryIcons'
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchParams] = useSearchParams()
+  const searchQuery = searchParams.get('search') || ''
   const { favorites } = useFavorites()
   const { history } = useToolHistory()
 
@@ -25,7 +24,6 @@ export default function Home() {
       })).filter(category => category.tools.length > 0)
     : toolCategories
 
-  const totalTools = toolCategories.reduce((sum, cat) => sum + cat.tools.length, 0)
   const recentTools = history.slice(0, 3).map(item => getToolBySlug(item.toolSlug)).filter(Boolean)
   const favoriteTools = favorites.slice(0, 3).map(slug => getToolBySlug(slug)).filter(Boolean)
 
@@ -41,55 +39,42 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero Section - Professional Design */}
-        <div className="text-center mb-12 animate-fade-in-up">
-          {/* Logo Center Piece */}
-          <div className="flex justify-center mb-8">
-            <Logo size="xl" showText={false} className="animate-float" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Hero Section Replaced with Premium Ad Placements */}
+        <div className="mb-8">
+          {/* Large Hero Ad Banner */}
+          <div className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-6 mb-6 border border-gray-200 dark:border-gray-700">
+            <div className="text-center mb-4">
+              <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+            </div>
+            <AdBanner slot="heroMainAd" className="mb-4" />
           </div>
 
-          <div className="inline-block mb-4 px-6 py-3 bg-gradient-to-r from-primary-50 via-accent-50 to-primary-50 dark:from-primary-900/30 dark:via-accent-900/30 dark:to-primary-900/30 rounded-full border-2 border-primary-200 dark:border-primary-700 shadow-lg">
-            <span className="text-sm font-bold bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent animate-pulse">
-              ⚡ {totalTools}+ Professional Developer Tools - 100% Free
-            </span>
+          {/* Dual Ad Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+              <div className="text-center mb-3">
+                <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
+              </div>
+              <AdBanner slot="heroLeftAd" />
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+              <div className="text-center mb-3">
+                <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
+              </div>
+              <AdBanner slot="heroRightAd" />
+            </div>
           </div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 bg-clip-text text-transparent mb-6 leading-tight tracking-tight">
-            DevTools Pro Suite
-          </h1>
-          <p className="text-2xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto mb-4 font-medium">
-            Powerful, Fast & Professional Online Tools
-          </p>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-10">
-            Format JSON, encode Base64, generate hashes, create passwords, build CSS designs, and much more. All tools are 100% free, secure, and privacy-focused.
-          </p>
 
-        {/* Search Bar */}
-        <div className="max-w-2xl mx-auto">
-          <div className="relative group">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search tools... (e.g., JSON, Base64, Hash)"
-              className="w-full px-6 py-4 text-lg rounded-full border-2 border-gray-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 dark:focus:ring-primary-900/30 dark:bg-gray-800 dark:border-gray-600 dark:text-white pl-14 transition-all duration-200 shadow-soft group-hover:shadow-glow"
-            />
-            <svg
-              className="absolute left-5 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400 group-focus-within:text-primary-500 transition-colors"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
+          {/* Search Results Info */}
           {searchQuery && (
-            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400 animate-fade-in">
-              Found {filteredCategories.reduce((sum, cat) => sum + cat.tools.length, 0)} tool(s)
-            </p>
+            <div className="bg-primary-50 dark:bg-primary-900/20 rounded-lg p-4 mb-6 border border-primary-200 dark:border-primary-800">
+              <p className="text-center text-primary-800 dark:text-primary-300 font-medium">
+                Found {filteredCategories.reduce((sum, cat) => sum + cat.tools.length, 0)} tool(s) matching "{searchQuery}"
+              </p>
+            </div>
           )}
         </div>
-      </div>
 
       {/* Quick Access Section */}
       {(recentTools.length > 0 || favoriteTools.length > 0) && !searchQuery && (

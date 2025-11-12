@@ -210,13 +210,42 @@ export default function ToolPage() {
 
   // Default layout for other tools
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Top Banner Ad */}
-      <AdBanner slot="topBanner" className="mb-6" />
+    <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Top Banner Ad - Full Width */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <AdBanner slot="topBanner" />
+        <AdBanner slot="topBanner2" />
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Sidebar - Ads Only */}
+        <div className="hidden xl:block xl:col-span-2">
+          <div className="sticky top-24 space-y-6">
+            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+              <div className="text-center mb-3">
+                <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
+              </div>
+              <AdSidebar sticky={false} />
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+              <div className="text-center mb-3">
+                <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+              </div>
+              <AdSidebar sticky={false} />
+            </div>
+          </div>
+        </div>
+
         {/* Main Content */}
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-8 xl:col-span-6">
+          {/* Pre-Tool Ad Banner */}
+          <div className="mb-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+            <div className="text-center mb-3">
+              <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+            </div>
+            <AdBanner slot="preToolAd" />
+          </div>
+
           {/* Tool Header */}
           <div className="mb-6 animate-fade-in-up">
             <div className="flex items-start justify-between gap-4">
@@ -249,21 +278,96 @@ export default function ToolPage() {
             <ToolComponent />
           </div>
 
+          {/* Post-Tool Ad Banner */}
+          <div className="mt-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+            <div className="text-center mb-3">
+              <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+            </div>
+            <AdBanner slot="postToolAd" />
+          </div>
+
           {/* In-Content Ad */}
-          <AdBanner slot="bottomBanner" className="my-8" />
+          <div className="my-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+            <div className="text-center mb-3">
+              <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
+            </div>
+            <AdBanner slot="bottomBanner" />
+          </div>
 
           {/* Additional Ad Section */}
-          <AdBanner slot="bottomBanner" className="mt-8" />
+          <div className="mt-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+            <div className="text-center mb-3">
+              <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
+            </div>
+            <AdBanner slot="bottomBanner2" />
+          </div>
         </div>
 
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
-          <AdSidebar sticky />
+        {/* Right Sidebar - Multiple Ad Units */}
+        <div className="lg:col-span-4 xl:col-span-4">
+          <div className="space-y-6">
+            {/* Primary Sidebar Ad */}
+            <div className="sticky top-24">
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
+                <div className="text-center mb-3">
+                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+                </div>
+                <AdSidebar sticky={false} />
+              </div>
+
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
+                <div className="text-center mb-3">
+                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
+                </div>
+                <AdSidebar sticky={false} />
+              </div>
+
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
+                <div className="text-center mb-3">
+                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+                </div>
+                <AdBanner slot="sidebarBanner" />
+              </div>
+
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
+                <div className="text-center mb-3">
+                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
+                </div>
+                <AdBanner slot="sidebarBanner2" />
+              </div>
+
+              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+                <div className="text-center mb-3">
+                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+                </div>
+                <AdSidebar sticky={false} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Below Results Ad */}
-      <AdBanner slot="bottomBanner" className="mt-8" />
+      {/* Bottom Full-Width Ads */}
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+          <div className="text-center mb-3">
+            <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+          </div>
+          <AdBanner slot="bottomBanner3" />
+        </div>
+        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+          <div className="text-center mb-3">
+            <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
+          </div>
+          <AdBanner slot="bottomBanner4" />
+        </div>
+        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+          <div className="text-center mb-3">
+            <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
+          </div>
+          <AdBanner slot="bottomBanner5" />
+        </div>
+      </div>
     </div>
   )
 }
