@@ -15,6 +15,7 @@ import {
 } from '@/utils/fileSystem'
 import { useNotification } from '@/contexts/NotificationContext'
 import CodeEditor from '@/components/Common/CodeEditor'
+import AdBanner from '@/components/Ads/AdBanner'
 
 export default function CodePlayground() {
   const { showNotification } = useNotification()
@@ -431,36 +432,69 @@ export default function CodePlayground() {
 
   const activeFile = activeFileId ? files[activeFileId] : null
 
-  const renderPreview = () => {
-    if (!activeFile || activeFile.type !== 'file') return null
+  // Generate combined preview (like CodePen)
+  const generateCombinedPreview = (): string => {
+    // Find HTML, CSS, and JS files in the current directory
+    const allFiles = Object.values(files).filter(f => f.type === 'file')
 
-    // For HTML files, try to create a live preview
-    if (activeFile.language === 'html') {
-      const htmlContent = activeFile.content || ''
-      return (
-        <iframe
-          srcDoc={htmlContent}
-          className="w-full h-full border-0 bg-white"
-          sandbox="allow-scripts allow-same-origin"
-          title="Preview"
-        />
-      )
+    let htmlFile = allFiles.find(f => f.name === 'index.html' || f.language === 'html')
+    let cssFiles = allFiles.filter(f => f.language === 'css')
+    let jsFiles = allFiles.filter(f => f.language === 'javascript')
+
+    // Start with HTML content or basic template
+    let html = htmlFile?.content || '<!DOCTYPE html><html><head></head><body></body></html>'
+
+    // Inject CSS
+    if (cssFiles.length > 0) {
+      const cssContent = cssFiles.map(f => f.content || '').join('\n')
+      const styleTag = `<style>${cssContent}</style>`
+
+      // Try to inject before </head>, otherwise at the beginning
+      if (html.includes('</head>')) {
+        html = html.replace('</head>', `${styleTag}\n</head>`)
+      } else if (html.includes('<head>')) {
+        html = html.replace('<head>', `<head>\n${styleTag}`)
+      } else {
+        html = `<style>${cssContent}</style>\n${html}`
+      }
     }
 
-    // For other files, show a message
+    // Inject JavaScript
+    if (jsFiles.length > 0) {
+      const jsContent = jsFiles.map(f => f.content || '').join('\n')
+      const scriptTag = `<script>${jsContent}</script>`
+
+      // Try to inject before </body>, otherwise at the end
+      if (html.includes('</body>')) {
+        html = html.replace('</body>', `${scriptTag}\n</body>`)
+      } else {
+        html += `\n${scriptTag}`
+      }
+    }
+
+    return html
+  }
+
+  const renderPreview = () => {
+    const previewContent = generateCombinedPreview()
+
     return (
-      <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-        <div className="text-center">
-          <p className="mb-2 text-4xl">👁️</p>
-          <p className="mb-1 font-medium">Preview not available</p>
-          <p className="text-sm">Preview is only available for HTML files</p>
-        </div>
-      </div>
+      <iframe
+        srcDoc={previewContent}
+        className="w-full h-full border-0 bg-white"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+        title="Live Preview"
+      />
     )
   }
 
   return (
     <div className="h-screen flex flex-col bg-white dark:bg-gray-900">
+      {/* Ad Banner */}
+      <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700">
+        <AdBanner slot="code-playground-top" format="horizontal" />
+      </div>
+
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 flex-shrink-0">
         <div className="flex items-center gap-2">
