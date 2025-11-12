@@ -30,6 +30,18 @@ export const ADSENSE_CONFIG = {
 
     // In-feed ads (for tool listings)
     inFeed: import.meta.env.VITE_ADSENSE_SLOT_IN_FEED || '1234567895',
+
+    // Multiplex ads (related content with ads) - HIGH REVENUE
+    multiplex: import.meta.env.VITE_ADSENSE_SLOT_MULTIPLEX || '1234567896',
+
+    // Anchor ads (sticky mobile ads) - MOBILE REVENUE BOOST
+    anchor: import.meta.env.VITE_ADSENSE_SLOT_ANCHOR || '1234567897',
+
+    // Second sidebar for high-traffic pages
+    sidebarSecondary: import.meta.env.VITE_ADSENSE_SLOT_SIDEBAR_2 || '1234567898',
+
+    // Vignette ads (full-screen interstitial) - PREMIUM REVENUE
+    vignette: import.meta.env.VITE_ADSENSE_SLOT_VIGNETTE || '1234567899',
   },
 
   // Ad placements configuration
@@ -60,6 +72,26 @@ export const ADSENSE_CONFIG = {
   // Performance settings
   lazyLoad: true, // Lazy load ads for better performance
   refreshInterval: 0, // Auto-refresh ads (0 = disabled, recommended to keep disabled)
+
+  // Advanced Revenue Features
+  enableAutoAds: import.meta.env.VITE_ADSENSE_AUTO_ADS === 'true' || false, // Let Google optimize placement
+  enableAnchorAds: import.meta.env.VITE_ADSENSE_ANCHOR_ADS === 'true' || true, // Sticky mobile ads (+30% mobile revenue)
+  enableVignetteAds: import.meta.env.VITE_ADSENSE_VIGNETTE_ADS === 'true' || false, // Full-screen between pages
+  enableMultiplexAds: import.meta.env.VITE_ADSENSE_MULTIPLEX_ADS === 'true' || true, // Related content ads
+
+  // Ad Refresh for Single Page Applications (use carefully!)
+  spaAdRefresh: {
+    enabled: import.meta.env.VITE_ADSENSE_SPA_REFRESH === 'true' || false,
+    interval: 30000, // Refresh ads every 30 seconds (minimum recommended)
+    maxRefreshes: 10, // Maximum refreshes per session
+  },
+
+  // Ad Density (more ads = more revenue, but worse UX if overdone)
+  adDensity: {
+    homepage: 'high', // Show more ads on homepage (high traffic)
+    toolPage: 'medium', // Balanced ads on tool pages
+    mobile: 'medium', // Moderate ads on mobile
+  },
 
   // Compliance
   respectDNT: true, // Respect Do Not Track

@@ -7,11 +7,15 @@ import { NotificationProvider } from './contexts/NotificationContext'
 import ErrorBoundary from './components/Common/ErrorBoundary'
 import Loading from './components/Common/Loading'
 import CookieConsent from './components/Common/CookieConsent'
+import AutoAds from './components/Ads/AutoAds'
+import VignetteAd from './components/Ads/VignetteAd'
 
 function App() {
   return (
     <ErrorBoundary>
       <NotificationProvider>
+        <AutoAds />
+        <VignetteAd minNavigations={3} autoDismissSeconds={8} />
         <Layout>
           <Suspense fallback={<Loading size="lg" text="Loading..." fullScreen />}>
             <Routes>
