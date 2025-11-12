@@ -139,13 +139,41 @@ REST_FRAMEWORK = {
     'MAX_PAGINATE_BY': 100,
 }
 
-# CORS settings
+# CORS settings - Restrict API access to frontend only
 CORS_ALLOWED_ORIGINS = os.environ.get(
     'CORS_ALLOWED_ORIGINS',
-    'http://localhost:3000,http://localhost:5173'
+    'http://localhost:3000,http://localhost:5173,https://devtools-co.com,https://www.devtools-co.com'
 ).split(',')
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+# Only allow credentials from specific origins in production
+if not DEBUG:
+    CORS_ORIGIN_WHITELIST = CORS_ALLOWED_ORIGINS
+    CORS_ALLOW_ALL_ORIGINS = False
+
+# Trusted referer domains (for additional security layer)
+TRUSTED_REFERERS = os.environ.get(
+    'TRUSTED_REFERERS',
+    'localhost:3000,localhost:5173,127.0.0.1:3000,127.0.0.1:5173,devtools-co.com,www.devtools-co.com'
+).split(',')
 
 # Cache settings (using Redis in production)
 CACHES = {

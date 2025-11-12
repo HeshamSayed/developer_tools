@@ -220,22 +220,7 @@ export default function PrivacyPolicy() {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              12. Contact Us
-            </h2>
-            <p className="text-gray-700 dark:text-gray-300 mb-4">
-              If you have any questions about this Privacy Policy, please contact us:
-            </p>
-            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-              <p className="text-gray-700 dark:text-gray-300">
-                <strong>Email:</strong> privacy@developer-tools.com<br />
-                <strong>Website:</strong> https://developer-tools.com
-              </p>
-            </div>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              13. GDPR Compliance (EU Users)
+              12. GDPR Compliance (EU Users)
             </h2>
             <p className="text-gray-700 dark:text-gray-300 mb-3">
               If you are a resident of the European Economic Area (EEA), you have certain data protection
@@ -249,7 +234,7 @@ export default function PrivacyPolicy() {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              14. California Privacy Rights (CCPA)
+              13. California Privacy Rights (CCPA)
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
               California residents have additional rights under the California Consumer Privacy Act (CCPA),

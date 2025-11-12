@@ -299,23 +299,7 @@ export default function TermsOfService() {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              16. Contact Information
-            </h2>
-            <p className="text-gray-700 dark:text-gray-300 mb-4">
-              If you have any questions about these Terms of Service, please contact us:
-            </p>
-            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-              <p className="text-gray-700 dark:text-gray-300">
-                <strong>Email:</strong> legal@developer-tools.com<br />
-                <strong>Website:</strong> https://developer-tools.com<br />
-                <strong>Support:</strong> support@developer-tools.com
-              </p>
-            </div>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              17. Severability
+              16. Severability
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
               If any provision of these Terms is found to be unenforceable or invalid, that provision will be
@@ -326,7 +310,7 @@ export default function TermsOfService() {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              18. Entire Agreement
+              17. Entire Agreement
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
               These Terms of Service, together with our Privacy Policy, constitute the entire agreement between
@@ -337,7 +321,7 @@ export default function TermsOfService() {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              19. Acknowledgment
+              18. Acknowledgment
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
               BY USING THE SERVICE, YOU ACKNOWLEDGE THAT YOU HAVE READ THESE TERMS OF SERVICE AND AGREE TO BE
