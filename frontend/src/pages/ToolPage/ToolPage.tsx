@@ -51,6 +51,12 @@ import StringCaseConverter from '@/components/Tools/StringCaseConverter'
 import UnitConverter from '@/components/Tools/UnitConverter'
 import EmailValidator from '@/components/Tools/EmailValidator'
 import CodePlayground from '@/components/Tools/CodePlayground'
+import ImageResizer from '@/components/Tools/ImageResizer'
+import ImageCompressor from '@/components/Tools/ImageCompressor'
+import ImageCropper from '@/components/Tools/ImageCropper'
+import ImageFlipper from '@/components/Tools/ImageFlipper'
+import MemeGenerator from '@/components/Tools/MemeGenerator'
+import ImageInfo from '@/components/Tools/ImageInfo'
 
 const toolComponents: Record<string, React.ComponentType> = {
   'json-formatter': JSONFormatter,
@@ -98,6 +104,12 @@ const toolComponents: Record<string, React.ComponentType> = {
   'unit-converter': UnitConverter,
   'email-validator': EmailValidator,
   'code-playground': CodePlayground,
+  'image-resizer': ImageResizer,
+  'image-compressor': ImageCompressor,
+  'image-cropper': ImageCropper,
+  'image-flipper': ImageFlipper,
+  'meme-generator': MemeGenerator,
+  'image-info': ImageInfo,
 }
 
 export default function ToolPage() {

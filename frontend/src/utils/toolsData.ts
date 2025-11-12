@@ -292,6 +292,50 @@ export const toolCategories: ToolCategory[] = [
     ],
   },
   {
+    slug: 'image-tools',
+    name: 'Image Tools',
+    description: 'Powerful image manipulation and editing tools',
+    icon: '🖼️',
+    tools: [
+      {
+        slug: 'image-resizer',
+        name: 'Image Resizer',
+        description: 'Resize images to custom dimensions with quality control',
+        category: 'image-tools',
+      },
+      {
+        slug: 'image-compressor',
+        name: 'Image Compressor',
+        description: 'Reduce image file size while maintaining quality',
+        category: 'image-tools',
+      },
+      {
+        slug: 'image-cropper',
+        name: 'Image Cropper',
+        description: 'Crop images to desired dimensions and aspect ratios',
+        category: 'image-tools',
+      },
+      {
+        slug: 'image-flipper',
+        name: 'Image Flipper & Rotator',
+        description: 'Flip and rotate images horizontally, vertically, or both',
+        category: 'image-tools',
+      },
+      {
+        slug: 'meme-generator',
+        name: 'Meme Generator',
+        description: 'Create hilarious memes with custom text and images',
+        category: 'image-tools',
+      },
+      {
+        slug: 'image-info',
+        name: 'Image Info & Resolution',
+        description: 'Get detailed information about image resolution and format',
+        category: 'image-tools',
+      },
+    ],
+  },
+  {
     slug: 'conversion-tools',
     name: 'Data Conversion',
     description: 'Convert between different data formats',
