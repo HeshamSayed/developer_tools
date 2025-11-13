@@ -19,11 +19,11 @@ class SecurityMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        # Validate referer for API endpoints (prevent direct API access)
+        # Validate referer for API endpoints (log but don't block)
         if request.path.startswith('/api/'):
             referer = request.META.get('HTTP_REFERER', '')
 
-            # Allow requests from trusted referers only
+            # Log requests from untrusted referers for monitoring
             if referer:
                 referer_valid = False
                 trusted_referers = getattr(settings, 'TRUSTED_REFERERS', [])
@@ -35,19 +35,11 @@ class SecurityMiddleware:
                         break
 
                 if not referer_valid and not settings.DEBUG:
-                    logger.warning(f"Untrusted referer for API access: {referer} from {self.get_client_ip(request)}")
-                    return JsonResponse({
-                        'error': 'Access denied',
-                        'detail': 'API access is restricted to authorized applications only'
-                    }, status=403)
+                    logger.info(f"API request from untrusted referer: {referer} from {self.get_client_ip(request)} to {request.path}")
             else:
-                # No referer header - block in production
+                # No referer header - log but allow (for curl, Postman, direct access)
                 if not settings.DEBUG:
-                    logger.warning(f"Missing referer for API access from {self.get_client_ip(request)}")
-                    return JsonResponse({
-                        'error': 'Access denied',
-                        'detail': 'API access requires valid referer'
-                    }, status=403)
+                    logger.info(f"API request without referer from {self.get_client_ip(request)} to {request.path}")
 
         # Validate request size
         content_length = request.META.get('CONTENT_LENGTH')

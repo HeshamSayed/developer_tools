@@ -9,7 +9,7 @@ export const ADSENSE_CONFIG = {
   enabled: import.meta.env.VITE_ADSENSE_ENABLED === 'true' || false,
 
   // Test mode (shows placeholder ads)
-  testMode: import.meta.env.VITE_ADSENSE_TEST_MODE === 'true' || true,
+  testMode: import.meta.env.VITE_ADSENSE_TEST_MODE === 'true',
 
   // Ad slots for different positions
   adSlots: {

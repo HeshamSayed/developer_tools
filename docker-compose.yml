@@ -111,6 +111,7 @@ services:
     environment:
       DEBUG: ${DEBUG:-True}
       SECRET_KEY: ${SECRET_KEY:-django-insecure-dev-key-change-in-production}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
       DB_ENGINE: django.db.backends.postgresql
       DB_NAME: ${DB_NAME:-developer_tools}
       DB_USER: ${DB_USER:-postgres}
@@ -143,6 +144,7 @@ services:
     environment:
       DEBUG: ${DEBUG:-True}
       SECRET_KEY: ${SECRET_KEY:-django-insecure-dev-key-change-in-production}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
       DB_ENGINE: django.db.backends.postgresql
       DB_NAME: ${DB_NAME:-developer_tools}
       DB_USER: ${DB_USER:-postgres}

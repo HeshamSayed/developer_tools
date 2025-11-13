@@ -16,6 +16,10 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
+# Trust proxy headers for getting the correct host/IP
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -291,6 +295,8 @@ LOGGING = {
 if not DEBUG:
     # HTTPS/SSL Settings
     SECURE_SSL_REDIRECT = True
+    # Trust X-Forwarded-Proto header from nginx reverse proxy
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000  # 1 year

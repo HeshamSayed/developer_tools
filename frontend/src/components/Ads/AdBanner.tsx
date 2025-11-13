@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import ADSENSE_CONFIG, { shouldShowAds, isMobile } from '@/config/adsense'
 
 interface AdBannerProps {
-  slot: 'topBanner' | 'bottomBanner' | 'mobileBanner'
+  slot: string
   className?: string
   format?: 'auto' | 'rectangle' | 'vertical' | 'horizontal'
 }
@@ -29,7 +29,7 @@ export default function AdBanner({ slot, className = '', format = 'auto' }: AdBa
 
   // Use mobile banner on mobile devices
   const actualSlot = mobile && slot !== 'mobileBanner' ? 'mobileBanner' : slot
-  const adSlot = ADSENSE_CONFIG.adSlots[actualSlot]
+  const adSlot = (ADSENSE_CONFIG.adSlots as any)[actualSlot] || ADSENSE_CONFIG.adSlots.topBanner
 
   if (ADSENSE_CONFIG.testMode) {
     return (

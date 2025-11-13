@@ -29,7 +29,7 @@ export interface AsyncTaskOptions {
  * @returns Promise that resolves with final result or rejects with error
  */
 export async function pollTaskStatus(
-  taskId: string,
+  _taskId: string,
   statusUrl: string,
   options: AsyncTaskOptions = {}
 ): Promise<any> {
