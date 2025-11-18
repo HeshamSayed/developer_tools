@@ -15,7 +15,6 @@ import {
 } from '@/utils/fileSystem'
 import { useNotification } from '@/contexts/NotificationContext'
 import CodeEditor from '@/components/Common/CodeEditor'
-import AdBanner from '@/components/Ads/AdBanner'
 
 export default function CodePlayground() {
   const { showSuccess } = useNotification()
@@ -490,11 +489,6 @@ export default function CodePlayground() {
 
   return (
     <div className="h-screen flex flex-col bg-white dark:bg-gray-900">
-      {/* Ad Banner */}
-      <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700">
-        <AdBanner slot="topBanner" format="horizontal" />
-      </div>
-
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 flex-shrink-0">
         <div className="flex items-center gap-2">

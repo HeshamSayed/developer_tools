@@ -1,16 +1,11 @@
 import { Link } from 'react-router-dom'
-import AdBanner from '@/components/Ads/AdBanner'
-import AdSidebar from '@/components/Ads/AdSidebar'
 
 export default function About() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Top Banner Ad */}
-      <AdBanner slot="topBanner" className="mb-6" />
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="max-w-4xl mx-auto">
         {/* Main Content */}
-        <div className="lg:col-span-3">
+        <div>
           {/* Hero Section */}
           <div className="card bg-gradient-to-br from-primary-50 to-accent-50 dark:from-primary-900/30 dark:to-accent-900/30 border-2 border-primary-200 dark:border-primary-800 mb-8 animate-fade-in-up">
             <div className="flex flex-col md:flex-row items-center gap-8">
@@ -200,15 +195,7 @@ export default function About() {
             </div>
           </div>
         </div>
-
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
-          <AdSidebar sticky />
-        </div>
       </div>
-
-      {/* Bottom Ad */}
-      <AdBanner slot="bottomBanner" className="mt-8" />
     </div>
   )
 }
