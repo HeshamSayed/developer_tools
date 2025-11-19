@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'data_tools',
     'code_tools',
     'ml_tools',
+    # Team collaboration
+    'teams',
 ]
 
 MIDDLEWARE = [
