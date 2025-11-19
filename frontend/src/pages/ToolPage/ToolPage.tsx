@@ -63,6 +63,29 @@ import PDFToExcel from '@/components/Tools/PDFToExcel'
 import ExcelToPDF from '@/components/Tools/ExcelToPDF'
 import ExcelGenerator from '@/components/Tools/ExcelGenerator'
 import PDFGenerator from '@/components/Tools/PDFGenerator'
+import JSONToYAML from '@/components/Tools/JSONToYAML'
+import YAMLToJSON from '@/components/Tools/YAMLToJSON'
+import TOMLToJSON from '@/components/Tools/TOMLToJSON'
+import JSONToTOML from '@/components/Tools/JSONToTOML'
+import JSONToSQL from '@/components/Tools/JSONToSQL'
+import JSONToJSONSchema from '@/components/Tools/JSONToJSONSchema'
+import JSONDiffViewer from '@/components/Tools/JSONDiffViewer'
+import StringLengthCalculator from '@/components/Tools/StringLengthCalculator'
+import BigNumberCalculator from '@/components/Tools/BigNumberCalculator'
+import GoStacktraceFormatter from '@/components/Tools/GoStacktraceFormatter'
+import TemplateStringValues from '@/components/Tools/TemplateStringValues'
+import SQLDDLToDiagram from '@/components/Tools/SQLDDLToDiagram'
+import MySQLCommandGenerator from '@/components/Tools/MySQLCommandGenerator'
+import TarCommandGenerator from '@/components/Tools/TarCommandGenerator'
+import CurlCommandGenerator from '@/components/Tools/CurlCommandGenerator'
+import IPLookup from '@/components/Tools/IPLookup'
+import HTTPRequestTester from '@/components/Tools/HTTPRequestTester'
+import DNSLookup from '@/components/Tools/DNSLookup'
+import PingTest from '@/components/Tools/PingTest'
+import WhoisLookup from '@/components/Tools/WhoisLookup'
+import CodeMinifier from '@/components/Tools/CodeMinifier'
+import ImageToBase64 from '@/components/Tools/ImageToBase64'
+import Base64ToImage from '@/components/Tools/Base64ToImage'
 
 const toolComponents: Record<string, React.ComponentType> = {
   'json-formatter': JSONFormatter,
@@ -122,6 +145,29 @@ const toolComponents: Record<string, React.ComponentType> = {
   'excel-to-pdf': ExcelToPDF,
   'excel-generator': ExcelGenerator,
   'pdf-generator': PDFGenerator,
+  'json-to-yaml': JSONToYAML,
+  'yaml-to-json': YAMLToJSON,
+  'toml-to-json': TOMLToJSON,
+  'json-to-toml': JSONToTOML,
+  'json-to-sql': JSONToSQL,
+  'json-to-json-schema': JSONToJSONSchema,
+  'json-diff-viewer': JSONDiffViewer,
+  'string-length-calculator': StringLengthCalculator,
+  'big-number-calculator': BigNumberCalculator,
+  'go-stacktrace-formatter': GoStacktraceFormatter,
+  'template-string-values': TemplateStringValues,
+  'sql-ddl-to-diagram': SQLDDLToDiagram,
+  'mysql-command-generator': MySQLCommandGenerator,
+  'tar-command-generator': TarCommandGenerator,
+  'curl-command-generator': CurlCommandGenerator,
+  'ip-lookup': IPLookup,
+  'http-request-tester': HTTPRequestTester,
+  'dns-lookup': DNSLookup,
+  'ping-test': PingTest,
+  'whois-lookup': WhoisLookup,
+  'code-minifier': CodeMinifier,
+  'image-to-base64': ImageToBase64,
+  'base64-to-image': Base64ToImage,
 }
 
 export default function ToolPage() {

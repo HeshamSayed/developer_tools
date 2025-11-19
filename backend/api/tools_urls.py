@@ -12,6 +12,12 @@ from api.views import (
     generator_tools,
     advanced_tools,
     utility_tools,
+    new_converter_tools,
+    new_utility_tools,
+    command_generator_tools,
+    network_tools,
+    code_tools,
+    image_conversion_tools,
 )
 
 urlpatterns = [
@@ -72,4 +78,40 @@ urlpatterns = [
     path('binary/convert', utility_tools.BinaryHexConverterView.as_view(), name='binary-convert'),
     path('ascii/generate', utility_tools.ASCIIArtGeneratorView.as_view(), name='ascii-generate'),
     path('ssl/check', utility_tools.SSLCheckerView.as_view(), name='ssl-check'),
+
+    # New Converter Tools
+    path('convert/json-to-yaml', new_converter_tools.JSONToYAMLView.as_view(), name='json-to-yaml'),
+    path('convert/yaml-to-json', new_converter_tools.YAMLToJSONView.as_view(), name='yaml-to-json'),
+    path('convert/toml-to-json', new_converter_tools.TOMLToJSONView.as_view(), name='toml-to-json'),
+    path('convert/json-to-toml', new_converter_tools.JSONToTOMLView.as_view(), name='json-to-toml'),
+    path('convert/json-to-sql', new_converter_tools.JSONToSQLView.as_view(), name='json-to-sql'),
+    path('convert/json-to-json-schema', new_converter_tools.JSONToJSONSchemaView.as_view(), name='json-to-json-schema'),
+
+    # New Utility Tools
+    path('utility/string-length', new_utility_tools.StringLengthCalculatorView.as_view(), name='string-length'),
+    path('utility/big-number', new_utility_tools.BigNumberCalculatorView.as_view(), name='big-number'),
+    path('utility/json-diff', new_utility_tools.JSONDiffViewerView.as_view(), name='json-diff'),
+    path('utility/go-stacktrace', new_utility_tools.GoStacktraceFormatterView.as_view(), name='go-stacktrace'),
+    path('utility/template-string', new_utility_tools.TemplateStringValuesView.as_view(), name='template-string'),
+    path('utility/sql-ddl-diagram', new_utility_tools.SQLDDLToDiagramView.as_view(), name='sql-ddl-diagram'),
+
+    # Command Generators
+    path('generate/mysql-command', command_generator_tools.MySQLCommandGeneratorView.as_view(), name='mysql-command'),
+    path('generate/tar-command', command_generator_tools.TarCommandGeneratorView.as_view(), name='tar-command'),
+    path('generate/curl-command', command_generator_tools.CurlCommandGeneratorView.as_view(), name='curl-command'),
+
+    # Network Tools
+    path('network/ip-lookup', network_tools.ip_lookup, name='ip-lookup'),
+    path('network/http-request-tester', network_tools.http_request_tester, name='http-request-tester'),
+    path('network/dns-lookup', network_tools.dns_lookup, name='dns-lookup'),
+    path('network/ping-test', network_tools.ping_test, name='ping-test'),
+    path('network/whois-lookup', network_tools.whois_lookup, name='whois-lookup'),
+
+    # Code Tools
+    path('code/minify', code_tools.code_minifier, name='code-minify'),
+    path('code/beautify', code_tools.code_beautifier, name='code-beautify'),
+
+    # Image Conversion Tools
+    path('image/to-base64', image_conversion_tools.image_to_base64, name='image-to-base64'),
+    path('image/from-base64', image_conversion_tools.base64_to_image, name='base64-to-image'),
 ]

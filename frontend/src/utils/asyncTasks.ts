@@ -2,6 +2,14 @@
  * Async task utilities for handling Celery task polling and progress tracking
  */
 
+// Get backend URL from environment
+const getBackendUrl = () => {
+  const url = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
+  return url.replace(/\/api$/, '')
+}
+
+const BACKEND_URL = getBackendUrl()
+
 export interface TaskStatus {
   task_id: string
   status: 'PENDING' | 'STARTED' | 'SUCCESS' | 'FAILURE' | 'RETRY'
@@ -55,7 +63,12 @@ export async function pollTaskStatus(
       }
 
       try {
-        const response = await fetch(statusUrl)
+        // Construct full URL if statusUrl is relative
+        const fullUrl = statusUrl.startsWith('http') ? statusUrl : `${BACKEND_URL}${statusUrl}`
+
+        const response = await fetch(fullUrl, {
+          credentials: 'include' // Required for CORS with credentials
+        })
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`)
@@ -131,8 +144,9 @@ export async function submitAndPoll<T>(
  * @returns Promise that resolves when cancellation is confirmed
  */
 export async function cancelTask(taskId: string): Promise<void> {
-  const response = await fetch(`/api/pdf-tools/cancel-task/${taskId}/`, {
-    method: 'DELETE'
+  const response = await fetch(`${BACKEND_URL}/api/pdf-tools/cancel-task/${taskId}/`, {
+    method: 'DELETE',
+    credentials: 'include'
   })
 
   if (!response.ok) {
@@ -158,7 +172,9 @@ export async function getQueueStatus(): Promise<{
   total_queued: number
   status: 'healthy' | 'busy' | 'unavailable'
 }> {
-  const response = await fetch('/api/pdf-tools/queue-status/')
+  const response = await fetch(`${BACKEND_URL}/api/pdf-tools/queue-status/`, {
+    credentials: 'include'
+  })
 
   if (!response.ok) {
     throw new Error('Failed to fetch queue status')

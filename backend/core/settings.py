@@ -168,6 +168,15 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
+
+# Trusted referers for API requests (used by security middleware)
+TRUSTED_REFERERS = [
+    'localhost:3000',
+    'localhost:5173',
+    'devtools-co.com',
+    'www.devtools-co.com',
+    'backend.devtools-co.com',
+]
 # Only allow credentials from specific origins in production
 if not DEBUG:
     CORS_ORIGIN_WHITELIST = CORS_ALLOWED_ORIGINS
@@ -325,14 +334,14 @@ SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # File Upload Security
-FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 104857600  # 100MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600  # 100MB
 FILE_UPLOAD_PERMISSIONS = 0o644
 ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml']
-MAX_UPLOAD_SIZE = 10485760  # 10MB
+MAX_UPLOAD_SIZE = 104857600  # 100MB
 
 # Input Validation
-MAX_JSON_SIZE = 1048576  # 1MB for JSON payloads
+MAX_JSON_SIZE = 104857600  # 100MB for JSON payloads (includes base64 PDFs)
 MAX_TEXT_LENGTH = 1000000  # 1 million characters for text inputs
 
 # Environment Variable Validation

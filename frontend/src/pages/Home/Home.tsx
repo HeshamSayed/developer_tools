@@ -232,23 +232,19 @@ export default function Home() {
       </div>
       </div>
 
-      {/* Bottom Section with Multiple Video Ads */}
+      {/* Bottom Section with AdSense */}
       <div className="mt-16 mb-12">
-        <div className="text-center mb-6">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Support Our Free Tools
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400">
-            Watch a quick ad to help us keep these tools free forever
-          </p>
-        </div>
-        <div className="space-y-8">
-          <div className="flex justify-center">
-            <VideoAd width={640} height={360} />
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-6">
+            <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
           </div>
-          {/* Additional horizontal ad banner */}
-          <div className="flex justify-center">
-            <AdBanner slot="afterVideoAd" className="max-w-4xl w-full" />
+          <div className="space-y-8">
+            <div className="flex justify-center">
+              <VideoAd width={640} height={360} />
+            </div>
+            <div className="flex justify-center">
+              <AdBanner slot="afterVideoAd" className="max-w-4xl w-full" />
+            </div>
           </div>
         </div>
       </div>
@@ -311,30 +307,6 @@ export default function Home() {
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             Access all tools 24/7 from any device, completely free
           </p>
-        </div>
-      </div>
-
-      {/* Premium Ad Section - Featured Placement */}
-      <div className="bg-gray-100 dark:bg-gray-800/70 py-12 mt-16 border-y-2 border-gray-200 dark:border-gray-700">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              Ready to boost your productivity?
-            </h3>
-            <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
-              Join thousands of developers using our tools daily - completely free!
-            </p>
-            <p className="text-sm text-gray-500 dark:text-gray-500 uppercase tracking-wider mb-4">Advertisement</p>
-          </div>
-          {/* Large Format AdSense - Prime Location */}
-          <div className="flex justify-center mb-6">
-            <AdBanner slot="featuredAd" className="w-full max-w-4xl" />
-          </div>
-          {/* Additional Ad Units for Better Coverage */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            <AdBanner slot="leftSideAd" />
-            <AdBanner slot="rightSideAd" />
-          </div>
         </div>
       </div>
 

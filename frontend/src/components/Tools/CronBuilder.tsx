@@ -11,36 +11,54 @@ export default function CronBuilder() {
   const cronExpression = `${minute} ${hour} ${dayOfMonth} ${month} ${dayOfWeek}`
 
   const getDescription = () => {
-    const parts = []
+    let description = 'Runs '
 
     // Minute
-    if (minute === '*') parts.push('every minute')
-    else if (minute.includes('/')) parts.push(`every ${minute.split('/')[1]} minutes`)
-    else parts.push(`at minute ${minute}`)
+    if (minute === '*') description += 'every minute'
+    else if (minute.includes('/')) description += `every ${minute.split('/')[1]} minutes`
+    else if (minute.includes(',')) description += `at minutes ${minute}`
+    else description += `at minute ${minute}`
 
     // Hour
-    if (hour === '*') parts.push('of every hour')
-    else if (hour.includes('/')) parts.push(`every ${hour.split('/')[1]} hours`)
-    else parts.push(`at ${hour}:00`)
-
-    // Day of month
-    if (dayOfMonth !== '*') {
-      parts.push(`on day ${dayOfMonth} of the month`)
+    if (hour === '*') description += ' of every hour'
+    else if (hour.includes('/')) description += ` of every ${hour.split('/')[1]} hours`
+    else if (hour.includes(',')) description += ` past hours ${hour}`
+    else {
+      const hourNum = parseInt(hour)
+      const formatted = hourNum.toString().padStart(2, '0') + ':00'
+      description += ` at ${formatted}`
     }
 
     // Month
     if (month !== '*') {
       const months = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      parts.push(`in ${months[parseInt(month)]}`)
+      description += ` in ${months[parseInt(month)]}`
     }
 
-    // Day of week
-    if (dayOfWeek !== '*') {
+    // CRITICAL: Day of Month and Day of Week use OR logic, not AND!
+    const domSpecified = dayOfMonth !== '*'
+    const dowSpecified = dayOfWeek !== '*'
+
+    if (domSpecified && dowSpecified) {
+      // Both specified = OR logic
+      description += ', on (day ' + dayOfMonth
+
+      description += ' OR '
+
       const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-      parts.push(`on ${days[parseInt(dayOfWeek)]}`)
+      description += days[parseInt(dayOfWeek)]
+
+      description += ')'
+    } else if (domSpecified) {
+      // Only day of month specified
+      description += `, on day ${dayOfMonth} of the month`
+    } else if (dowSpecified) {
+      // Only day of week specified
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+      description += `, on ${days[parseInt(dayOfWeek)]}`
     }
 
-    return parts.join(' ')
+    return description
   }
 
   const commonPatterns = [
@@ -149,11 +167,25 @@ export default function CronBuilder() {
         </code>
       </div>
 
+      {/* DOM/DOW Warning */}
+      {dayOfMonth !== '*' && dayOfWeek !== '*' && (
+        <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-400 dark:border-amber-600 rounded-lg p-4">
+          <h3 className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-2 flex items-center gap-2">
+            <span>⚠️</span>
+            <span>OR Logic Warning</span>
+          </h3>
+          <p className="text-amber-800 dark:text-amber-200 text-sm">
+            Both Day of Month and Day of Week are specified. In standard cron, these use <strong>OR logic</strong>,
+            meaning the job runs when <em>either</em> condition is met.
+          </p>
+        </div>
+      )}
+
       <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
         <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Description
         </h3>
-        <p className="text-gray-800 dark:text-gray-200 capitalize">
+        <p className="text-gray-800 dark:text-gray-200">
           {getDescription()}
         </p>
       </div>
@@ -185,6 +217,10 @@ export default function CronBuilder() {
           <li>• Use <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">,</code> to separate values (e.g., 1,15,30)</li>
           <li>• Use <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">-</code> for ranges (e.g., 1-5)</li>
           <li>• Use <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">/</code> for step values (e.g., */15 for every 15 minutes)</li>
+          <li className="pt-2 border-t border-blue-200 dark:border-blue-700">
+            ⚠️ <strong>Important:</strong> When both Day of Month and Day of Week are specified,
+            cron uses OR logic (not AND). The job runs when either condition is true.
+          </li>
         </ul>
       </div>
     </div>

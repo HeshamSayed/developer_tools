@@ -76,7 +76,7 @@ services:
     environment:
       DEBUG: ${DEBUG:-True}
       SECRET_KEY: ${SECRET_KEY:-django-insecure-dev-key-change-in-production}
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend,0.0.0.0,84.247.172.31,devtools-co.com,www.devtools-co.com,backend.devtools-co.com}
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173}
       DB_ENGINE: django.db.backends.postgresql
       DB_NAME: ${DB_NAME:-developer_tools}
@@ -111,7 +111,7 @@ services:
     environment:
       DEBUG: ${DEBUG:-True}
       SECRET_KEY: ${SECRET_KEY:-django-insecure-dev-key-change-in-production}
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend,0.0.0.0,84.247.172.31,devtools-co.com,www.devtools-co.com,backend.devtools-co.com}
       DB_ENGINE: django.db.backends.postgresql
       DB_NAME: ${DB_NAME:-developer_tools}
       DB_USER: ${DB_USER:-postgres}
@@ -144,7 +144,7 @@ services:
     environment:
       DEBUG: ${DEBUG:-True}
       SECRET_KEY: ${SECRET_KEY:-django-insecure-dev-key-change-in-production}
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend,0.0.0.0,84.247.172.31,devtools-co.com,www.devtools-co.com,backend.devtools-co.com}
       DB_ENGINE: django.db.backends.postgresql
       DB_NAME: ${DB_NAME:-developer_tools}
       DB_USER: ${DB_USER:-postgres}
@@ -191,7 +191,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://backend.devtools-co.com/api}
     container_name: developer_tools_frontend
     ports:
       - "3000:80"

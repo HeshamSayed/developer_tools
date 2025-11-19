@@ -3,7 +3,13 @@
  * Provides methods to interact with Python-powered Django backend
  */
 
-const BACKEND_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+// Remove /api suffix if present since endpoints include it
+const getBackendUrl = () => {
+  const url = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
+  return url.replace(/\/api$/, '')
+}
+
+const BACKEND_URL = getBackendUrl()
 
 // Helper function to handle API requests
 async function apiRequest<T>(endpoint: string, data: any): Promise<T> {
@@ -13,6 +19,7 @@ async function apiRequest<T>(endpoint: string, data: any): Promise<T> {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include', // Required for CORS with credentials
       body: JSON.stringify(data),
     })
 
@@ -26,9 +33,9 @@ async function apiRequest<T>(endpoint: string, data: any): Promise<T> {
         const text = await response.text()
         // Check if it's HTML
         if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
-          throw new Error(`Server error (${response.status}): The backend server encountered an error. Please check server logs.`)
+          throw new Error(`Server error (${response.status}): The server encountered an error. Please try again later.`)
         }
-        throw new Error(`API request failed: ${text.substring(0, 100)}`)
+        throw new Error('Server error: Unable to process your request. Please try again.')
       }
     }
 
@@ -36,14 +43,13 @@ async function apiRequest<T>(endpoint: string, data: any): Promise<T> {
     try {
       return await response.json()
     } catch (parseError) {
-      const text = await response.text()
-      console.error('Failed to parse response:', text)
-      throw new Error('Invalid JSON response from server')
+      console.error('Failed to parse server response')
+      throw new Error('Invalid response from server. Please try again.')
     }
   } catch (error: any) {
     // Handle network errors (fetch failed before getting a response)
     if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
-      throw new Error(`Cannot connect to backend server at ${BACKEND_URL}. Please ensure the backend is running and CORS is configured correctly.`)
+      throw new Error('Unable to connect to the server. Please check your internet connection and try again.')
     }
     // Re-throw other errors
     throw error
@@ -384,7 +390,9 @@ export const pdfTools = {
 
   // Task Status Check
   getTaskStatus: async (taskId: string) => {
-    const response = await fetch(`${BACKEND_URL}/api/pdf-tools/task-status/${taskId}/`)
+    const response = await fetch(`${BACKEND_URL}/api/pdf-tools/task-status/${taskId}/`, {
+      credentials: 'include'
+    })
     if (!response.ok) {
       throw new Error('Failed to fetch task status')
     }
@@ -394,7 +402,8 @@ export const pdfTools = {
   // Cancel Task
   cancelTask: async (taskId: string) => {
     const response = await fetch(`${BACKEND_URL}/api/pdf-tools/cancel-task/${taskId}/`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      credentials: 'include'
     })
     if (!response.ok) {
       throw new Error('Failed to cancel task')
@@ -404,7 +413,9 @@ export const pdfTools = {
 
   // Queue Status
   getQueueStatus: async () => {
-    const response = await fetch(`${BACKEND_URL}/api/pdf-tools/queue-status/`)
+    const response = await fetch(`${BACKEND_URL}/api/pdf-tools/queue-status/`, {
+      credentials: 'include'
+    })
     if (!response.ok) {
       throw new Error('Failed to fetch queue status')
     }
@@ -620,10 +631,235 @@ export const codeTools = {
     }>('/api/code-tools/syntax-check/', data),
 }
 
+// ============================================
+// CONVERTER TOOLS API
+// ============================================
+
+export const converterTools = {
+  jsonToYaml: (data: { input: string }) =>
+    apiRequest<{
+      success: boolean
+      result: string
+      metadata: { processing_time_ms: number }
+    }>('/api/tools/convert/json-to-yaml', data),
+
+  yamlToJson: (data: { input: string; formatted?: boolean }) =>
+    apiRequest<{
+      success: boolean
+      result: string
+      metadata: { processing_time_ms: number }
+    }>('/api/tools/convert/yaml-to-json', data),
+
+  tomlToJson: (data: { input: string; formatted?: boolean }) =>
+    apiRequest<{
+      success: boolean
+      result: string
+      metadata: { processing_time_ms: number }
+    }>('/api/tools/convert/toml-to-json', data),
+
+  jsonToToml: (data: { input: string }) =>
+    apiRequest<{
+      success: boolean
+      result: string
+      metadata: { processing_time_ms: number }
+    }>('/api/tools/convert/json-to-toml', data),
+
+  jsonToSql: (data: { input: string; table_name: string }) =>
+    apiRequest<{
+      success: boolean
+      result: string
+      metadata: { processing_time_ms: number; statement_count: number }
+    }>('/api/tools/convert/json-to-sql', data),
+
+  jsonToJsonSchema: (data: { input: string; title?: string }) =>
+    apiRequest<{
+      success: boolean
+      result: string
+      metadata: { processing_time_ms: number }
+    }>('/api/tools/convert/json-to-json-schema', data),
+}
+
+// ============================================
+// UTILITY TOOLS API
+// ============================================
+
+export const utilityTools = {
+  stringLength: (data: { input: string }) =>
+    apiRequest<{
+      success: boolean
+      result: {
+        characters: number
+        characters_no_spaces: number
+        words: number
+        lines: number
+        paragraphs: number
+        bytes: number
+        sentences: number
+        kilobytes: number
+      }
+      metadata: { processing_time_ms: number }
+    }>('/api/tools/utility/string-length', data),
+
+  bigNumber: (data: { num1: string; num2: string; operation: string }) =>
+    apiRequest<{
+      success: boolean
+      result: string
+      metadata: { processing_time_ms: number; digits: number }
+    }>('/api/tools/utility/big-number', data),
+
+  jsonDiff: (data: { json1: string; json2: string }) =>
+    apiRequest<{
+      success: boolean
+      differences: Array<{
+        path: string
+        type: 'added' | 'removed' | 'modified'
+        value?: any
+        old?: any
+        new?: any
+      }>
+      metadata: { processing_time_ms: number; difference_count: number }
+    }>('/api/tools/utility/json-diff', data),
+
+  goStacktrace: (data: { input: string }) =>
+    apiRequest<{
+      success: boolean
+      frames: Array<{
+        type: 'error' | 'goroutine' | 'frame'
+        message?: string
+        function?: string
+        location?: string
+      }>
+      metadata: { processing_time_ms: number; frame_count: number }
+    }>('/api/tools/utility/go-stacktrace', data),
+
+  templateString: (data: { template: string; values: string }) =>
+    apiRequest<{
+      success: boolean
+      result: string
+      metadata: { processing_time_ms: number }
+    }>('/api/tools/utility/template-string', data),
+
+  sqlDdlDiagram: (data: { input: string }) =>
+    apiRequest<{
+      success: boolean
+      tables: Array<{
+        name: string
+        columns: Array<{
+          name: string
+          type: string
+          is_primary: boolean
+          is_not_null: boolean
+          is_unique: boolean
+        }>
+      }>
+      metadata: { processing_time_ms: number; table_count: number }
+    }>('/api/tools/utility/sql-ddl-diagram', data),
+}
+
+// ============================================
+// COMMAND GENERATOR TOOLS API
+// ============================================
+
+export const commandGenerators = {
+  mysqlCommand: (data: {
+    command_type: string
+    table_name: string
+    columns?: string
+    where_clause?: string
+    values?: string
+    set_clause?: string
+    table_schema?: string
+  }) =>
+    apiRequest<{
+      success: boolean
+      result: string
+      metadata: { processing_time_ms: number }
+    }>('/api/tools/generate/mysql-command', data),
+
+  tarCommand: (data: {
+    operation: string
+    compression: string
+    archive_name: string
+    files?: string
+    verbose?: boolean
+  }) =>
+    apiRequest<{
+      success: boolean
+      result: string
+      explanation: string[]
+      metadata: { processing_time_ms: number }
+    }>('/api/tools/generate/tar-command', data),
+
+  curlCommand: (data: {
+    url: string
+    method: string
+    headers?: string
+    body?: string
+    query_params?: string
+  }) =>
+    apiRequest<{
+      success: boolean
+      result: string
+      metadata: { processing_time_ms: number }
+    }>('/api/tools/generate/curl-command', data),
+}
+
+// ============================================
+// GENERAL API CLIENT
+// ============================================
+
+export const backendApi = {
+  get: async (endpoint: string, options?: { params?: Record<string, any> }) => {
+    const url = new URL(`${BACKEND_URL}${endpoint}`)
+
+    if (options?.params) {
+      Object.entries(options.params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(key, String(value))
+        }
+      })
+    }
+
+    const response = await fetch(url.toString(), {
+      method: 'GET',
+      credentials: 'include',
+    })
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Request failed' }))
+      throw new Error(error.error || 'Request failed')
+    }
+
+    return response.json()
+  },
+
+  post: async (endpoint: string, data?: any) => {
+    const response = await fetch(`${BACKEND_URL}${endpoint}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    })
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Request failed' }))
+      throw new Error(error.error || 'Request failed')
+    }
+
+    return response.json()
+  },
+}
+
 // Export all APIs
 export default {
   imageTools,
   pdfTools,
   dataTools,
   codeTools,
+  converterTools,
+  utilityTools,
+  commandGenerators,
+  backendApi,
 }

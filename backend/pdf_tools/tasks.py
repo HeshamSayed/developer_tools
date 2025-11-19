@@ -20,7 +20,8 @@ logger = get_task_logger(__name__)
 def base64_to_pdf(base64_string):
     """Convert base64 string to PDF BytesIO object"""
     try:
-        pdf_data = base64.b64decode(base64_string)
+        # Strip data URL prefix if present (e.g., "data:application/pdf;base64,")
+        pdf_data = base64.b64decode(base64_string.split(',')[1] if ',' in base64_string else base64_string)
         return BytesIO(pdf_data)
     except Exception as e:
         logger.error(f"Error decoding base64 to PDF: {str(e)}")
@@ -44,11 +45,22 @@ def pdf_to_word_task(self, pdf_base64):
         from pdf2docx import Converter
 
         pdf_file = base64_to_pdf(pdf_base64)
+        pdf_data = pdf_file.getvalue()
+        logger.info(f"PDF BytesIO size: {len(pdf_data)} bytes")
 
-        # Create temporary files
-        with tempfile.NamedTemporaryFile(mode='wb', suffix='.pdf', delete=False) as pdf_temp:
-            pdf_temp.write(pdf_file.getvalue())
+        # Create temporary file and close it properly before reading
+        pdf_temp = tempfile.NamedTemporaryFile(mode='wb', suffix='.pdf', delete=False)
+        try:
+            pdf_temp.write(pdf_data)
+            pdf_temp.flush()
+            os.fsync(pdf_temp.fileno())  # Force OS to write to disk
             pdf_temp_path = pdf_temp.name
+        finally:
+            pdf_temp.close()  # Close file handle before reading
+
+        # Verify file was written correctly
+        file_size = os.path.getsize(pdf_temp_path)
+        logger.info(f"Temporary PDF file created: {pdf_temp_path}, size: {file_size} bytes")
 
         docx_temp_path = pdf_temp_path.replace('.pdf', '.docx')
 
@@ -105,8 +117,8 @@ def word_to_pdf_task(self, docx_base64):
         from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
         from reportlab.lib.styles import getSampleStyleSheet
 
-        # Decode DOCX
-        docx_data = base64.b64decode(docx_base64)
+        # Decode DOCX (strip data URL prefix if present)
+        docx_data = base64.b64decode(docx_base64.split(',')[1] if ',' in docx_base64 else docx_base64)
         docx_file = BytesIO(docx_data)
 
         # Read Word document
@@ -233,8 +245,8 @@ def excel_to_pdf_task(self, excel_base64):
         from reportlab.lib.styles import getSampleStyleSheet
         from io import BytesIO
 
-        # Decode Excel
-        excel_data = base64.b64decode(excel_base64)
+        # Decode Excel (strip data URL prefix if present)
+        excel_data = base64.b64decode(excel_base64.split(',')[1] if ',' in excel_base64 else excel_base64)
         excel_file = BytesIO(excel_data)
 
         # Read all sheets
@@ -523,20 +535,15 @@ def create_excel_task(self, sheets_data):
 @shared_task(name='pdf_tools.tasks.cleanup_old_results')
 def cleanup_old_results():
     """
-    Periodic task: Clean up old task results from Redis
+    Periodic task: Clean up old task results
+    Note: Results are automatically expired in Redis after CELERY_RESULT_EXPIRES (1 hour)
+    This task is kept for compatibility but doesn't need to do anything.
     """
     try:
-        from celery.result import AsyncResult
-        from django_celery_results.models import TaskResult
-
-        # Delete task results older than 24 hours
-        cutoff_time = timezone.now() - timedelta(hours=24)
-        old_results = TaskResult.objects.filter(date_created__lt=cutoff_time)
-        count = old_results.count()
-        old_results.delete()
-
-        logger.info(f"Cleaned up {count} old task results")
-        return {'cleaned': count}
+        # Redis automatically handles result expiration based on CELERY_RESULT_EXPIRES setting
+        # No manual cleanup needed
+        logger.info("Task cleanup check completed - Redis handles expiration automatically")
+        return {'status': 'ok', 'message': 'Redis auto-expiration is active'}
 
     except Exception as e:
         logger.error(f"Cleanup task failed: {str(e)}")

@@ -75,36 +75,83 @@ export default function CrontabGenerator() {
     if (min === '*') explanation += 'every minute'
     else if (min.includes('/')) explanation += `every ${min.split('/')[1]} minutes`
     else if (min.includes(',')) explanation += `at minutes ${min}`
+    else if (min.includes('-')) explanation += `at minutes ${min}`
     else explanation += `at minute ${min}`
 
     // Hour
     if (hr === '*') explanation += ' of every hour'
     else if (hr.includes('/')) explanation += ` of every ${hr.split('/')[1]} hours`
     else if (hr.includes(',')) explanation += ` past hours ${hr}`
-    else if (hr.includes('-')) explanation += ` between hours ${hr}`
-    else explanation += ` past hour ${hr}`
-
-    // Day of month
-    if (dom === '*') { /* skip */ }
-    else if (dom.includes('/')) explanation += `, every ${dom.split('/')[1]} days`
-    else if (dom.includes(',')) explanation += `, on days ${dom} of the month`
-    else if (dom === 'L') explanation += ', on the last day of the month'
-    else explanation += `, on day ${dom} of the month`
+    else if (hr.includes('-')) explanation += ` during hours ${hr}`
+    else {
+      const hourNum = parseInt(hr)
+      const formatted = hourNum.toString().padStart(2, '0') + ':00'
+      explanation += ` at ${formatted}`
+    }
 
     // Month
-    if (mon === '*') { /* skip */ }
-    else if (mon.includes('/')) explanation += `, every ${mon.split('/')[1]} months`
-    else if (mon.includes(',')) explanation += `, in months ${mon}`
-    else explanation += `, in month ${mon}`
+    if (mon !== '*') {
+      if (mon.includes('/')) explanation += `, every ${mon.split('/')[1]} months`
+      else if (mon.includes(',')) {
+        const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        const months = mon.split(',').map(m => monthNames[parseInt(m)] || m).join(', ')
+        explanation += `, in ${months}`
+      } else if (mon.includes('-')) explanation += `, in months ${mon}`
+      else {
+        const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        explanation += `, in ${monthNames[parseInt(mon)] || mon}`
+      }
+    }
 
-    // Day of week
-    if (dow === '*') { /* skip */ }
-    else if (dow === '1-5') explanation += ', on weekdays'
-    else if (dow === '0,6' || dow === '6,0') explanation += ', on weekends'
-    else if (dow.includes(',')) explanation += `, on days of week ${dow}`
-    else {
-      const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-      explanation += `, on ${dayNames[parseInt(dow)] || `day ${dow}`}`
+    // CRITICAL: Day of Month and Day of Week use OR logic, not AND!
+    const domSpecified = dom !== '*'
+    const dowSpecified = dow !== '*'
+
+    if (domSpecified && dowSpecified) {
+      // Both specified = OR logic
+      explanation += ', on ('
+
+      // Day of month part
+      if (dom.includes('/')) explanation += `every ${dom.split('/')[1]} days`
+      else if (dom.includes(',')) explanation += `days ${dom}`
+      else if (dom === 'L') explanation += 'the last day of the month'
+      else explanation += `day ${dom}`
+
+      explanation += ' OR '
+
+      // Day of week part
+      if (dow === '1-5') explanation += 'weekdays'
+      else if (dow === '0,6' || dow === '6,0') explanation += 'weekends'
+      else if (dow.includes(',')) {
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        const days = dow.split(',').map(d => dayNames[parseInt(d)] || d).join(', ')
+        explanation += days
+      } else if (dow.includes('-')) explanation += `days of week ${dow}`
+      else {
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        explanation += dayNames[parseInt(dow)] || `day ${dow}`
+      }
+
+      explanation += ')'
+    } else if (domSpecified) {
+      // Only day of month specified
+      if (dom.includes('/')) explanation += `, every ${dom.split('/')[1]} days`
+      else if (dom.includes(',')) explanation += `, on days ${dom} of the month`
+      else if (dom === 'L') explanation += ', on the last day of the month'
+      else explanation += `, on day ${dom} of the month`
+    } else if (dowSpecified) {
+      // Only day of week specified
+      if (dow === '1-5') explanation += ', on weekdays'
+      else if (dow === '0,6' || dow === '6,0') explanation += ', on weekends'
+      else if (dow.includes(',')) {
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        const days = dow.split(',').map(d => dayNames[parseInt(d)] || d).join(', ')
+        explanation += `, on ${days}`
+      } else if (dow.includes('-')) explanation += `, on days of week ${dow}`
+      else {
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        explanation += `, on ${dayNames[parseInt(dow)] || `day ${dow}`}`
+      }
     }
 
     return explanation
@@ -296,6 +343,29 @@ export default function CrontabGenerator() {
         />
       </div>
 
+      {/* DOM/DOW Warning */}
+      {dayOfMonth !== '*' && dayOfWeek !== '*' && (
+        <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-400 dark:border-amber-600 rounded-lg p-4">
+          <h3 className="text-sm font-semibold text-amber-900 dark:text-amber-100 mb-2 flex items-center gap-2">
+            <span>⚠️</span>
+            <span>Important: OR Logic Detected</span>
+          </h3>
+          <p className="text-amber-800 dark:text-amber-200 text-sm mb-2">
+            You've specified both <strong>Day of Month</strong> ({dayOfMonth}) and <strong>Day of Week</strong> ({dayOfWeek}).
+          </p>
+          <p className="text-amber-800 dark:text-amber-200 text-sm">
+            In standard cron, these fields use <strong>OR logic</strong>, not AND. This means your job will run when <em>either</em> condition is met, not only when both are true.
+          </p>
+          <div className="mt-3 p-3 bg-amber-100 dark:bg-amber-900/40 rounded text-xs text-amber-900 dark:text-amber-100">
+            <strong>Example:</strong> <code className="bg-amber-200 dark:bg-amber-800 px-1 rounded">1 2 3 4 2</code> runs at 02:01 in April on:
+            <ul className="list-disc ml-5 mt-1">
+              <li>Day 3 of April (even if it's not Tuesday)</li>
+              <li>OR every Tuesday in April (even if it's not the 3rd)</li>
+            </ul>
+          </div>
+        </div>
+      )}
+
       {/* Explanation */}
       {explanation && (
         <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
@@ -402,7 +472,42 @@ export default function CrontabGenerator() {
               <li><code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">*/15 * * * *</code> - Every 15 minutes</li>
               <li><code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">0 9-17 * * 1-5</code> - Every hour 9AM-5PM, weekdays</li>
               <li><code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">0 0 1,15 * *</code> - 1st and 15th of month</li>
+              <li><code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">30 4 1-15 * *</code> - 4:30 AM, first 15 days</li>
+              <li><code className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">0 0 * * 0</code> - Weekly on Sunday at midnight</li>
             </ul>
+          </div>
+
+          <div className="border-t border-gray-300 dark:border-gray-600 pt-4">
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+              <span>⚠️</span>
+              <span>Critical: Day of Month vs Day of Week (OR Logic)</span>
+            </h4>
+            <div className="space-y-2 text-gray-700 dark:text-gray-300 text-xs">
+              <p>
+                When <strong>both</strong> Day of Month and Day of Week are specified (not <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">*</code>),
+                cron uses <strong>OR logic</strong>, not AND logic. This is a common source of confusion.
+              </p>
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded p-3 space-y-2">
+                <p className="font-semibold text-red-900 dark:text-red-100">Common Mistake:</p>
+                <p><code className="bg-red-100 dark:bg-red-900 px-2 py-1 rounded">0 12 13 * 5</code></p>
+                <p className="text-red-800 dark:text-red-200">
+                  ❌ Many people think: "Runs at noon on Friday the 13th only"
+                </p>
+                <p className="text-red-800 dark:text-red-200">
+                  ✅ Actually runs: "At noon on (day 13 of month) OR (every Friday)"
+                </p>
+                <p className="text-red-800 dark:text-red-200 mt-2">
+                  This means it runs on the 13th of every month AND every Friday, not just Friday the 13th!
+                </p>
+              </div>
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded p-3">
+                <p className="font-semibold text-green-900 dark:text-green-100">Workaround for AND logic:</p>
+                <p className="text-green-800 dark:text-green-200">
+                  To run only when both conditions match, use <code className="bg-green-100 dark:bg-green-900 px-1 rounded">*</code> for one field
+                  and add conditional logic in your script to check the other condition.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </details>
