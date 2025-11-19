@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import AdBanner from '@/components/Ads/AdBanner'
 import AdSidebar from '@/components/Ads/AdSidebar'
 
 export default function About() {
@@ -7,7 +6,6 @@ export default function About() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Top Banner Ad */}
-      <AdBanner slot="topBanner" className="mb-6" />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Main Content */}
@@ -297,7 +295,6 @@ export default function About() {
       </div>
 
       {/* Bottom Ad */}
-      <AdBanner slot="bottomBanner" className="mt-8" />
     </div>
   )
 }

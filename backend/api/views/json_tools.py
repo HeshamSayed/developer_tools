@@ -1,12 +1,13 @@
 import json
 import time
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 from analytics.models import ToolUsage
 
 
-class JSONFormatterView(APIView):
+class JSONFormatterView(AuthenticatedToolView):
     """Format/prettify JSON with proper indentation"""
 
     def post(self, request):
@@ -81,7 +82,7 @@ class JSONFormatterView(APIView):
         return ip
 
 
-class JSONValidatorView(APIView):
+class JSONValidatorView(AuthenticatedToolView):
     """Validate JSON and provide detailed error information"""
 
     def post(self, request):
@@ -132,7 +133,7 @@ class JSONValidatorView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class JSONMinifyView(APIView):
+class JSONMinifyView(AuthenticatedToolView):
     """Minify JSON by removing whitespace"""
 
     def post(self, request):

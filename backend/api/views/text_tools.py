@@ -2,11 +2,12 @@ import time
 import re
 import difflib
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class TextDiffView(APIView):
+class TextDiffView(AuthenticatedToolView):
     """Compare two texts and show differences"""
 
     def post(self, request):
@@ -66,7 +67,7 @@ class TextDiffView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class RegexTesterView(APIView):
+class RegexTesterView(AuthenticatedToolView):
     """Test regex patterns against input text"""
 
     def post(self, request):

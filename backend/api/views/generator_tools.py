@@ -3,6 +3,7 @@ import time
 import io
 import base64
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 from PIL import Image, ImageDraw
@@ -14,7 +15,7 @@ except ImportError:
     QRCODE_AVAILABLE = False
 
 
-class UUIDGeneratorView(APIView):
+class UUIDGeneratorView(AuthenticatedToolView):
     """Generate UUIDs (v1, v4)"""
 
     def post(self, request):
@@ -60,7 +61,7 @@ class UUIDGeneratorView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class QRCodeGeneratorView(APIView):
+class QRCodeGeneratorView(AuthenticatedToolView):
     """Generate QR codes with image output"""
 
     def post(self, request):

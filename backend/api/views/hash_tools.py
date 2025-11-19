@@ -1,11 +1,12 @@
 import hashlib
 import time
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class HashGeneratorView(APIView):
+class HashGeneratorView(AuthenticatedToolView):
     """Generate various hash types (MD5, SHA1, SHA256, SHA512)"""
 
     SUPPORTED_ALGORITHMS = ['md5', 'sha1', 'sha256', 'sha512']

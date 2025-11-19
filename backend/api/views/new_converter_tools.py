@@ -6,11 +6,12 @@ import yaml
 import toml
 import time
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class JSONToYAMLView(APIView):
+class JSONToYAMLView(AuthenticatedToolView):
     """Convert JSON to YAML"""
 
     def post(self, request):
@@ -52,7 +53,7 @@ class JSONToYAMLView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class YAMLToJSONView(APIView):
+class YAMLToJSONView(AuthenticatedToolView):
     """Convert YAML to JSON"""
 
     def post(self, request):
@@ -98,7 +99,7 @@ class YAMLToJSONView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class TOMLToJSONView(APIView):
+class TOMLToJSONView(AuthenticatedToolView):
     """Convert TOML to JSON"""
 
     def post(self, request):
@@ -144,7 +145,7 @@ class TOMLToJSONView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class JSONToTOMLView(APIView):
+class JSONToTOMLView(AuthenticatedToolView):
     """Convert JSON to TOML"""
 
     def post(self, request):
@@ -186,7 +187,7 @@ class JSONToTOMLView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class JSONToSQLView(APIView):
+class JSONToSQLView(AuthenticatedToolView):
     """Convert JSON to SQL INSERT statements"""
 
     def post(self, request):
@@ -265,7 +266,7 @@ class JSONToSQLView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class JSONToJSONSchemaView(APIView):
+class JSONToJSONSchemaView(AuthenticatedToolView):
     """Generate JSON Schema from JSON data"""
 
     def post(self, request):

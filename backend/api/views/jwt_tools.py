@@ -2,11 +2,12 @@ import json
 import base64
 import time
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class JWTDecoderView(APIView):
+class JWTDecoderView(AuthenticatedToolView):
     """Decode JWT tokens and display header, payload, and signature"""
 
     def post(self, request):

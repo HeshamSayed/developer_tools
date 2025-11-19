@@ -2,11 +2,12 @@ import time
 from datetime import datetime, timezone
 import pytz
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class TimestampConverterView(APIView):
+class TimestampConverterView(AuthenticatedToolView):
     """Convert between timestamps and human-readable dates"""
 
     def post(self, request):

@@ -1,8 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { getToolBySlug } from '@/utils/toolsData'
-import AdBanner from '@/components/Ads/AdBanner'
-import AdSidebar from '@/components/Ads/AdSidebar'
 import { useFavorites } from '@/hooks/useFavorites'
 import { useToolHistory } from '@/hooks/useToolHistory'
 import { useNotification } from '@/contexts/NotificationContext'
@@ -213,13 +211,13 @@ export default function ToolPage() {
     )
   }
 
-  // Special layout for Code Playground - full screen with ads at top/bottom
+  // Special layout for Code Playground - full screen
   if (toolSlug === 'code-playground') {
     return (
       <div className="flex flex-col h-screen">
-        {/* Compact Header with Ads */}
+        {/* Compact Header */}
         <div className="flex-shrink-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-          <div className="px-4 py-2 flex items-center justify-between">
+          <div className="px-4 py-3 flex items-center justify-between">
             <div>
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">
                 {tool.name}
@@ -242,8 +240,6 @@ export default function ToolPage() {
               </svg>
             </button>
           </div>
-          {/* Top Ad Banner */}
-          <AdBanner slot="topBanner" className="px-4 pb-2" />
         </div>
 
         {/* Full Height Code Playground */}
@@ -254,165 +250,39 @@ export default function ToolPage() {
     )
   }
 
-  // Default layout for other tools
+  // Default layout for other tools - clean, centered
   return (
-    <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Top Banner Ad - Full Width */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <AdBanner slot="topBanner" />
-        <AdBanner slot="topBanner2" />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Sidebar - Ads Only */}
-        <div className="hidden xl:block xl:col-span-2">
-          <div className="sticky top-24 space-y-6">
-            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-              <div className="text-center mb-3">
-                <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
-              </div>
-              <AdSidebar sticky={false} />
-            </div>
-            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-              <div className="text-center mb-3">
-                <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
-              </div>
-              <AdSidebar sticky={false} />
-            </div>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Tool Header */}
+      <div className="mb-6 animate-fade-in-up">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              {tool.name}
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              {tool.description}
+            </p>
           </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="lg:col-span-8 xl:col-span-6">
-          {/* Pre-Tool Ad Banner */}
-          <div className="mb-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-center mb-3">
-              <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
-            </div>
-            <AdBanner slot="preToolAd" />
-          </div>
-
-          {/* Tool Header */}
-          <div className="mb-6 animate-fade-in-up">
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                  {tool.name}
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {tool.description}
-                </p>
-              </div>
-              <button
-                onClick={handleToggleFavorite}
-                className={`flex-shrink-0 p-3 rounded-lg border-2 transition-all duration-200 hover:scale-110 ${
-                  isToolFavorite
-                    ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-700 text-yellow-500 hover:shadow-glow'
-                    : 'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-400 hover:border-yellow-300 dark:hover:border-yellow-700 hover:text-yellow-500'
-                }`}
-                title={isToolFavorite ? 'Remove from favorites' : 'Add to favorites'}
-              >
-                <svg className="w-6 h-6" fill={isToolFavorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Tool Component */}
-          <div className="card">
-            <ToolComponent />
-          </div>
-
-          {/* Post-Tool Ad Banner */}
-          <div className="mt-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-center mb-3">
-              <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
-            </div>
-            <AdBanner slot="postToolAd" />
-          </div>
-
-          {/* In-Content Ad */}
-          <div className="my-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-center mb-3">
-              <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
-            </div>
-            <AdBanner slot="bottomBanner" />
-          </div>
-
-          {/* Additional Ad Section */}
-          <div className="mt-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-center mb-3">
-              <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
-            </div>
-            <AdBanner slot="bottomBanner2" />
-          </div>
-        </div>
-
-        {/* Right Sidebar - Multiple Ad Units */}
-        <div className="lg:col-span-4 xl:col-span-4">
-          <div className="space-y-6">
-            {/* Primary Sidebar Ad */}
-            <div className="sticky top-24">
-              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
-                <div className="text-center mb-3">
-                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
-                </div>
-                <AdSidebar sticky={false} />
-              </div>
-
-              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
-                <div className="text-center mb-3">
-                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
-                </div>
-                <AdSidebar sticky={false} />
-              </div>
-
-              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
-                <div className="text-center mb-3">
-                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
-                </div>
-                <AdBanner slot="sidebarBanner" />
-              </div>
-
-              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 mb-6">
-                <div className="text-center mb-3">
-                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
-                </div>
-                <AdBanner slot="sidebarBanner2" />
-              </div>
-
-              <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-                <div className="text-center mb-3">
-                  <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
-                </div>
-                <AdSidebar sticky={false} />
-              </div>
-            </div>
-          </div>
+          <button
+            onClick={handleToggleFavorite}
+            className={`flex-shrink-0 p-3 rounded-lg border-2 transition-all duration-200 hover:scale-110 ${
+              isToolFavorite
+                ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-700 text-yellow-500 hover:shadow-glow'
+                : 'bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-400 hover:border-yellow-300 dark:hover:border-yellow-700 hover:text-yellow-500'
+            }`}
+            title={isToolFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          >
+            <svg className="w-6 h-6" fill={isToolFavorite ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+            </svg>
+          </button>
         </div>
       </div>
 
-      {/* Bottom Full-Width Ads */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-          <div className="text-center mb-3">
-            <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
-          </div>
-          <AdBanner slot="bottomBanner3" />
-        </div>
-        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-          <div className="text-center mb-3">
-            <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Sponsored</span>
-          </div>
-          <AdBanner slot="bottomBanner4" />
-        </div>
-        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-          <div className="text-center mb-3">
-            <span className="text-xs text-gray-400 dark:text-gray-600 uppercase tracking-wider">Advertisement</span>
-          </div>
-          <AdBanner slot="bottomBanner5" />
-        </div>
+      {/* Tool Component */}
+      <div className="card">
+        <ToolComponent />
       </div>
     </div>
   )

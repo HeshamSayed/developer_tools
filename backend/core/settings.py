@@ -397,3 +397,138 @@ def validate_environment_variables():
 
 # Run validation when settings module is loaded
 validate_environment_variables()
+
+# ====================================================================
+# JWT AUTHENTICATION & API KEY CONFIGURATION
+# ====================================================================
+
+# Add authentication app
+INSTALLED_APPS += [
+    'rest_framework_simplejwt',
+    'authentication',
+]
+
+# REST Framework Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',  # For unauthenticated requests
+        'user': '1000/hour',  # For authenticated requests
+    },
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
+    'DATETIME_FORMAT': '%Y-%m-%dT%H:%M:%S%z',
+}
+
+# Simple JWT Configuration
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+    
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    
+    'JTI_CLAIM': 'jti',
+    
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(hours=1),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
+}
+
+# Redis Configuration for Caching and Rate Limiting
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.environ.get('REDIS_URL', 'redis://redis:6379/0'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'SOCKET_CONNECT_TIMEOUT': 5,
+            'SOCKET_TIMEOUT': 5,
+            'CONNECTION_POOL_KWARGS': {
+                'max_connections': 50,
+            },
+        },
+        'KEY_PREFIX': 'devtools',
+    }
+}
+
+# Session Configuration
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
+# API Key Header Name
+API_KEY_HEADER = 'X-API-Key'
+
+# Usage Tracking Configuration
+TRACK_API_USAGE = True
+LOG_API_REQUESTS = True
+
+# Subscription Tier Quotas (defined in models but referenced here for clarity)
+SUBSCRIPTION_QUOTAS = {
+    'free': {
+        'daily_api_calls': 10,
+        'monthly_api_calls': 100,
+        'max_file_size_mb': 2,
+        'price_usd': 0,
+    },
+    'pro': {
+        'daily_api_calls': 1000,
+        'monthly_api_calls': 10000,
+        'max_file_size_mb': 10,
+        'price_usd': 2.00,
+        'overage_per_call_usd': 0.01,
+    },
+    'enterprise': {
+        'daily_api_calls': 999999,
+        'monthly_api_calls': 9999999,
+        'max_file_size_mb': 100,
+        'price_usd': 'custom',
+    },
+}
+
+# Tool-specific pricing (per-use pricing)
+TOOL_PRICING = {
+    'json_validator': {'price_per_call_usd': 0.002},
+    'yaml_validator': {'price_per_call_usd': 0.002},
+    'image_resize': {'price_per_mb_usd': 0.01},
+    'pdf_converter': {'price_per_mb_usd': 0.01},
+    'batch_processing': {'multiplier': 1.5},
+}
+
+print("✓ JWT Authentication configured successfully")
+print("✓ Redis caching configured")
+print("✓ API rate limiting enabled")

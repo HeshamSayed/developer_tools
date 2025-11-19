@@ -3,6 +3,7 @@ import re
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -25,7 +26,7 @@ except ImportError:
     MARKDOWN_AVAILABLE = False
 
 
-class SQLFormatterView(APIView):
+class SQLFormatterView(AuthenticatedToolView):
     """Format SQL queries"""
 
     def post(self, request):
@@ -75,7 +76,7 @@ class SQLFormatterView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class XMLFormatterView(APIView):
+class XMLFormatterView(AuthenticatedToolView):
     """Format XML"""
 
     def post(self, request):
@@ -125,7 +126,7 @@ class XMLFormatterView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class XMLValidatorView(APIView):
+class XMLValidatorView(AuthenticatedToolView):
     """Validate XML"""
 
     def post(self, request):
@@ -171,7 +172,7 @@ class XMLValidatorView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class YAMLFormatterView(APIView):
+class YAMLFormatterView(AuthenticatedToolView):
     """Format YAML"""
 
     def post(self, request):
@@ -220,7 +221,7 @@ class YAMLFormatterView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class MarkdownPreviewView(APIView):
+class MarkdownPreviewView(AuthenticatedToolView):
     """Convert Markdown to HTML"""
 
     def post(self, request):

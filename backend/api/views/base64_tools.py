@@ -1,11 +1,12 @@
 import base64
 import time
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class Base64EncodeView(APIView):
+class Base64EncodeView(AuthenticatedToolView):
     """Encode text or data to Base64"""
 
     def post(self, request):
@@ -41,7 +42,7 @@ class Base64EncodeView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class Base64DecodeView(APIView):
+class Base64DecodeView(AuthenticatedToolView):
     """Decode Base64 to text"""
 
     def post(self, request):

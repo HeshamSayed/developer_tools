@@ -3,11 +3,12 @@ Command Generator Tools - MySQL, Tar, Curl
 """
 import time
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class MySQLCommandGeneratorView(APIView):
+class MySQLCommandGeneratorView(AuthenticatedToolView):
     """Generate MySQL commands"""
 
     def post(self, request):
@@ -77,7 +78,7 @@ class MySQLCommandGeneratorView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class TarCommandGeneratorView(APIView):
+class TarCommandGeneratorView(AuthenticatedToolView):
     """Generate tar commands"""
 
     def post(self, request):
@@ -165,7 +166,7 @@ class TarCommandGeneratorView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class CurlCommandGeneratorView(APIView):
+class CurlCommandGeneratorView(AuthenticatedToolView):
     """Generate curl commands"""
 
     def post(self, request):

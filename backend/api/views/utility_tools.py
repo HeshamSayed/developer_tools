@@ -11,6 +11,7 @@ Libraries used:
 """
 
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 from api.exceptions import ToolException
@@ -29,7 +30,7 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 
 
-class CSSFormatterView(APIView):
+class CSSFormatterView(AuthenticatedToolView):
     """Format CSS code with proper indentation"""
 
     def post(self, request):
@@ -66,7 +67,7 @@ class CSSFormatterView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class CSSMinifierView(APIView):
+class CSSMinifierView(AuthenticatedToolView):
     """Minify CSS code by removing whitespace and comments"""
 
     def post(self, request):
@@ -109,7 +110,7 @@ class CSSMinifierView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class JavaScriptFormatterView(APIView):
+class JavaScriptFormatterView(AuthenticatedToolView):
     """Format JavaScript code with proper indentation"""
 
     def post(self, request):
@@ -148,7 +149,7 @@ class JavaScriptFormatterView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class JavaScriptMinifierView(APIView):
+class JavaScriptMinifierView(AuthenticatedToolView):
     """Minify JavaScript code (basic minification)"""
 
     def post(self, request):
@@ -194,7 +195,7 @@ class JavaScriptMinifierView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class ImageConverterView(APIView):
+class ImageConverterView(AuthenticatedToolView):
     """Convert images between PNG, JPG, and WebP formats"""
 
     def post(self, request):
@@ -270,7 +271,7 @@ class ImageConverterView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class LoremIpsumGeneratorView(APIView):
+class LoremIpsumGeneratorView(AuthenticatedToolView):
     """Generate Lorem Ipsum placeholder text"""
 
     LOREM_WORDS = [
@@ -350,7 +351,7 @@ class LoremIpsumGeneratorView(APIView):
         return words
 
 
-class BinaryHexConverterView(APIView):
+class BinaryHexConverterView(AuthenticatedToolView):
     """Convert between Binary, Hexadecimal, and Decimal"""
 
     def post(self, request):
@@ -439,7 +440,7 @@ class BinaryHexConverterView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class ASCIIArtGeneratorView(APIView):
+class ASCIIArtGeneratorView(AuthenticatedToolView):
     """Generate ASCII art from text using pyfiglet"""
 
     def post(self, request):
@@ -483,7 +484,7 @@ class ASCIIArtGeneratorView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class SSLCheckerView(APIView):
+class SSLCheckerView(AuthenticatedToolView):
     """Check SSL/TLS certificate information for a domain"""
 
     def post(self, request):

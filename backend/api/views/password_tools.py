@@ -3,11 +3,12 @@ import string
 import re
 import time
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class PasswordGeneratorView(APIView):
+class PasswordGeneratorView(AuthenticatedToolView):
     """Generate secure random passwords"""
 
     def post(self, request):
@@ -81,7 +82,7 @@ class PasswordGeneratorView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class PasswordStrengthView(APIView):
+class PasswordStrengthView(AuthenticatedToolView):
     """Analyze password strength and provide feedback"""
 
     def post(self, request):

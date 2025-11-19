@@ -3,11 +3,12 @@ import csv
 import io
 import time
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class CSVToJSONView(APIView):
+class CSVToJSONView(AuthenticatedToolView):
     """Convert CSV to JSON"""
 
     def post(self, request):
@@ -58,7 +59,7 @@ class CSVToJSONView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class JSONToCSVView(APIView):
+class JSONToCSVView(AuthenticatedToolView):
     """Convert JSON to CSV"""
 
     def post(self, request):

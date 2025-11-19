@@ -5,11 +5,12 @@ import json
 import time
 import re
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class StringLengthCalculatorView(APIView):
+class StringLengthCalculatorView(AuthenticatedToolView):
     """Calculate string statistics"""
 
     def post(self, request):
@@ -52,7 +53,7 @@ class StringLengthCalculatorView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class BigNumberCalculatorView(APIView):
+class BigNumberCalculatorView(AuthenticatedToolView):
     """Perform operations on big numbers"""
 
     def post(self, request):
@@ -129,7 +130,7 @@ class BigNumberCalculatorView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class JSONDiffViewerView(APIView):
+class JSONDiffViewerView(AuthenticatedToolView):
     """Compare two JSON objects"""
 
     def post(self, request):
@@ -204,7 +205,7 @@ class JSONDiffViewerView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class GoStacktraceFormatterView(APIView):
+class GoStacktraceFormatterView(AuthenticatedToolView):
     """Format Go stacktrace"""
 
     def post(self, request):
@@ -264,7 +265,7 @@ class GoStacktraceFormatterView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class TemplateStringValuesView(APIView):
+class TemplateStringValuesView(AuthenticatedToolView):
     """Replace template placeholders with values"""
 
     def post(self, request):
@@ -322,7 +323,7 @@ class TemplateStringValuesView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class SQLDDLToDiagramView(APIView):
+class SQLDDLToDiagramView(AuthenticatedToolView):
     """Parse SQL DDL and generate diagram data"""
 
     def post(self, request):

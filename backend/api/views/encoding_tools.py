@@ -2,11 +2,12 @@ import time
 import html
 from urllib.parse import quote, unquote
 from rest_framework.views import APIView
+from api.views.base import AuthenticatedToolView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-class URLEncodeView(APIView):
+class URLEncodeView(AuthenticatedToolView):
     """Encode text for URLs"""
 
     def post(self, request):
@@ -39,7 +40,7 @@ class URLEncodeView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class URLDecodeView(APIView):
+class URLDecodeView(AuthenticatedToolView):
     """Decode URL-encoded text"""
 
     def post(self, request):
@@ -78,7 +79,7 @@ class URLDecodeView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class HTMLEncodeView(APIView):
+class HTMLEncodeView(AuthenticatedToolView):
     """Encode HTML entities"""
 
     def post(self, request):
@@ -111,7 +112,7 @@ class HTMLEncodeView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class HTMLDecodeView(APIView):
+class HTMLDecodeView(AuthenticatedToolView):
     """Decode HTML entities"""
 
     def post(self, request):
