@@ -13,6 +13,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false)
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(null)
   const { user, isAuthenticated, logout } = useAuth()
   const { isOpen: searchOpen, open: openSearch, close: closeSearch } = useGlobalSearch()
   const navigate = useNavigate()
@@ -27,6 +28,12 @@ export default function Header() {
     setDarkMode(isDark)
     if (isDark) {
       document.documentElement.classList.add('dark')
+    }
+
+    // Load profile photo from localStorage
+    const savedPhoto = localStorage.getItem('profilePhoto')
+    if (savedPhoto) {
+      setProfilePhoto(savedPhoto)
     }
   }, [])
 
@@ -253,9 +260,17 @@ export default function Header() {
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-900/30 dark:to-accent-900/30 hover:from-primary-100 hover:to-accent-100 dark:hover:from-primary-900/50 dark:hover:to-accent-900/50 border border-primary-200 dark:border-primary-800 transition-all duration-200"
                 >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-semibold text-sm">
-                    {user?.username?.charAt(0).toUpperCase()}
-                  </div>
+                  {profilePhoto ? (
+                    <img
+                      src={profilePhoto}
+                      alt={user?.username}
+                      className="w-8 h-8 rounded-full object-cover border-2 border-white dark:border-gray-600"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-semibold text-sm">
+                      {user?.username?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                   <div className="text-left">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">{user?.username}</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">{user?.subscription_tier}</p>
@@ -284,6 +299,26 @@ export default function Header() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                       </svg>
                       Dashboard
+                    </Link>
+                    <Link
+                      to="/ai-assistant"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                      AI Assistant
+                    </Link>
+                    <Link
+                      to="/mock-api"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      Mock API
                     </Link>
                     <Link
                       to="/teams"
@@ -376,9 +411,17 @@ export default function Header() {
             {isAuthenticated && user && (
               <div className="px-4 py-3 mb-4 bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-900/30 dark:to-accent-900/30 rounded-lg border border-primary-200 dark:border-primary-800">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-semibold">
-                    {user.username?.charAt(0).toUpperCase()}
-                  </div>
+                  {profilePhoto ? (
+                    <img
+                      src={profilePhoto}
+                      alt={user.username}
+                      className="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-gray-600"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-semibold">
+                      {user.username?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                   <div>
                     <p className="text-sm font-semibold text-gray-900 dark:text-white">{user.username}</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">{user.subscription_tier} Plan</p>

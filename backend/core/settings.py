@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'ml_tools',
     # Team collaboration
     'teams',
+    # AI Assistant
+    'ai_assistant',
+    # API Mocking
+    'api_mocking',
 ]
 
 MIDDLEWARE = [
@@ -148,7 +152,7 @@ REST_FRAMEWORK = {
 # CORS settings - Restrict API access to frontend only
 CORS_ALLOWED_ORIGINS = os.environ.get(
     'CORS_ALLOWED_ORIGINS',
-    'http://localhost:3000,http://localhost:5173,https://devtools-co.com,https://www.devtools-co.com'
+    'http://localhost:3000,http://localhost:3001,http://localhost:5173,https://devtools-co.com,https://www.devtools-co.com'
 ).split(',')
 
 CORS_ALLOW_CREDENTIALS = True

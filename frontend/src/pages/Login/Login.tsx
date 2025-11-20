@@ -53,15 +53,18 @@ export default function Login() {
             </h1>
           </Link>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Sign in to access your dashboard
+            Access your productivity dashboard and boost your workflow
           </p>
         </div>
 
         {/* Login Card */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
             Welcome Back
           </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+            Continue where you left off and accelerate your development
+          </p>
 
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
@@ -86,7 +89,7 @@ export default function Login() {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                placeholder="Enter your username"
+                placeholder="your_username"
                 disabled={loading}
               />
             </div>
@@ -102,7 +105,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                placeholder="Enter your password"
+                placeholder="••••••••"
                 disabled={loading}
               />
             </div>
@@ -151,15 +154,15 @@ export default function Login() {
         <div className="mt-8 grid grid-cols-3 gap-4 text-center">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
             <div className="text-2xl mb-1">⚡</div>
-            <p className="text-xs text-gray-600 dark:text-gray-400">Fast Tools</p>
+            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">10x Faster</p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl mb-1">🔒</div>
-            <p className="text-xs text-gray-600 dark:text-gray-400">Secure</p>
+            <div className="text-2xl mb-1">🚀</div>
+            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Boost Productivity</p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl mb-1">🎯</div>
-            <p className="text-xs text-gray-600 dark:text-gray-400">Reliable</p>
+            <div className="text-2xl mb-1">💼</div>
+            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Enterprise-Ready</p>
           </div>
         </div>
       </div>

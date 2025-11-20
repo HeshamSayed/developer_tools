@@ -10,6 +10,12 @@ urlpatterns = [
     # Authentication & User Management
     path('api/auth/', include('authentication.urls')),
 
+    # AI Assistant
+    path('api/ai/', include('ai_assistant.urls')),
+
+    # API Mocking
+    path('api/mock-api/', include('api_mocking.urls')),
+
     # Team Collaboration
     path('api/', include('teams.urls')),
 

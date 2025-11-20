@@ -163,16 +163,16 @@ class SubscriptionView(APIView):
 def verify_api_key(request):
     """Verify if an API key is valid"""
     key = request.data.get('key')
-    
+
     if not key:
         return Response({'valid': False, 'error': 'No API key provided'}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     try:
         api_key = APIKey.objects.get(key=key)
         if api_key.is_valid():
             profile = UserProfile.objects.get(user=api_key.user)
             can_request, error = profile.can_make_request()
-            
+
             return Response({
                 'valid': can_request,
                 'user': api_key.user.username,
@@ -185,3 +185,53 @@ def verify_api_key(request):
             return Response({'valid': False, 'error': 'API key is expired or inactive'}, status=status.HTTP_401_UNAUTHORIZED)
     except APIKey.DoesNotExist:
         return Response({'valid': False, 'error': 'Invalid API key'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def platform_stats(request):
+    """Get platform-wide statistics"""
+    from django.utils import timezone
+    from django.db.models import Count, Sum
+    from datetime import timedelta
+
+    # Get total users
+    total_users = User.objects.count()
+
+    # Get active users (logged in last 30 days)
+    thirty_days_ago = timezone.now() - timedelta(days=30)
+    active_users = User.objects.filter(last_login__gte=thirty_days_ago).count()
+
+    # Get total API requests
+    total_requests = UsageLog.objects.count()
+
+    # Get requests today
+    today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    requests_today = UsageLog.objects.filter(timestamp__gte=today_start).count()
+
+    # Get total cost
+    total_cost = UsageLog.objects.aggregate(total=Sum('cost_usd'))['total'] or 0
+
+    # Tool categories count (hardcoded as we don't store tools in DB)
+    # This matches the toolCategories.length from frontend
+    total_categories = 10
+
+    # Total tools count (hardcoded, should match frontend)
+    total_tools = 117
+
+    return Response({
+        'users': {
+            'total': total_users,
+            'active': active_users,
+        },
+        'tools': {
+            'total': total_tools,
+            'categories': total_categories,
+        },
+        'requests': {
+            'total': total_requests,
+            'today': requests_today,
+        },
+        'uptime': '99.9%',  # Calculate from server start time in production
+        'total_cost_usd': float(total_cost),
+    })

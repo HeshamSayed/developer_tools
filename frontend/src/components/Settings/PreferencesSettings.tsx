@@ -41,14 +41,8 @@ export default function PreferencesSettings() {
       // Save to localStorage
       localStorage.setItem('userPreferences', JSON.stringify(preferences))
 
-      // Apply theme immediately
-      if (preferences.theme === 'dark') {
-        document.documentElement.classList.add('dark')
-        localStorage.setItem('theme', 'dark')
-      } else if (preferences.theme === 'light') {
-        document.documentElement.classList.remove('dark')
-        localStorage.setItem('theme', 'light')
-      }
+      // Apply theme (though it's already applied immediately on change)
+      applyTheme(preferences.theme)
 
       await new Promise(resolve => setTimeout(resolve, 500))
       setMessage('Preferences saved successfully!')
@@ -60,8 +54,32 @@ export default function PreferencesSettings() {
     }
   }
 
+  const applyTheme = (theme: 'light' | 'dark' | 'system') => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    } else if (theme === 'light') {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    } else if (theme === 'system') {
+      // Check system preference
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      if (isDark) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+      localStorage.setItem('theme', 'system')
+    }
+  }
+
   const updatePreference = <K extends keyof Preferences>(key: K, value: Preferences[K]) => {
     setPreferences(prev => ({ ...prev, [key]: value }))
+
+    // Apply theme change immediately
+    if (key === 'theme') {
+      applyTheme(value as 'light' | 'dark' | 'system')
+    }
   }
 
   return (

@@ -12,6 +12,9 @@ import Dashboard from './pages/Dashboard'
 import Settings from './pages/Settings'
 import TeamsList from './pages/Teams'
 import TeamDashboard from './pages/Team'
+import Pricing from './pages/Pricing'
+import AIAssistantPage from './pages/AIAssistant/AIAssistantPage'
+import MockAPIWorkspace from './pages/MockAPI/MockAPIWorkspace'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import { NotificationProvider } from './contexts/NotificationContext'
 import ErrorBoundary from './components/Common/ErrorBoundary'
@@ -35,6 +38,7 @@ function App() {
                 }
               />
               <Route path="/about" element={<About />} />
+              <Route path="/pricing" element={<Pricing />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/login" element={<Login />} />
@@ -68,6 +72,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <TeamDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ai-assistant"
+                element={
+                  <ProtectedRoute>
+                    <AIAssistantPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/mock-api"
+                element={
+                  <ProtectedRoute>
+                    <MockAPIWorkspace />
                   </ProtectedRoute>
                 }
               />

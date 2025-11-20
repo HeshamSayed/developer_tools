@@ -61,6 +61,7 @@ beautifulsoup4==4.12.3
 lxml==5.1.0
 dnspython==2.6.1
 python-whois==0.9.4
+Faker==24.0.0
 
 # Async Task Queue & Message Broker
 celery==5.3.6

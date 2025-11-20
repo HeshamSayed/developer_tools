@@ -139,6 +139,23 @@ export interface UsageStats {
   recent_activity: UsageLog[];
 }
 
+export interface PlatformStats {
+  users: {
+    total: number;
+    active: number;
+  };
+  tools: {
+    total: number;
+    categories: number;
+  };
+  requests: {
+    total: number;
+    today: number;
+  };
+  uptime: string;
+  total_cost_usd: number;
+}
+
 class AuthService {
   /**
    * Register a new user
@@ -260,6 +277,14 @@ class AuthService {
    */
   getRefreshToken(): string | null {
     return localStorage.getItem('refresh_token');
+  }
+
+  /**
+   * Get platform statistics (public endpoint)
+   */
+  async getPlatformStats(): Promise<PlatformStats> {
+    const response = await axios.get(`${API_BASE_URL}/auth/platform-stats/`);
+    return response.data;
   }
 }
 

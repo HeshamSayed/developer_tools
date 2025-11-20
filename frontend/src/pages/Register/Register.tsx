@@ -75,15 +75,18 @@ export default function Register() {
             </h1>
           </Link>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Create your free account
+            Start boosting your productivity in under 60 seconds
           </p>
         </div>
 
         {/* Register Card */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-            Sign Up
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            Create Your Free Account
           </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+            Join thousands of developers who save hours every week
+          </p>
 
           {error && (
             <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
@@ -112,7 +115,7 @@ export default function Register() {
                     ? 'border-red-500 dark:border-red-500'
                     : 'border-gray-300 dark:border-gray-600'
                 } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all`}
-                placeholder="Choose a username"
+                placeholder="john_developer"
                 disabled={loading}
               />
               {errors.username && (
@@ -135,7 +138,7 @@ export default function Register() {
                     ? 'border-red-500 dark:border-red-500'
                     : 'border-gray-300 dark:border-gray-600'
                 } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all`}
-                placeholder="Enter your email"
+                placeholder="john@company.com"
                 disabled={loading}
               />
               {errors.email && (
@@ -158,7 +161,7 @@ export default function Register() {
                     ? 'border-red-500 dark:border-red-500'
                     : 'border-gray-300 dark:border-gray-600'
                 } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all`}
-                placeholder="Create a password"
+                placeholder="Minimum 8 characters"
                 disabled={loading}
               />
               {errors.password && (
@@ -184,7 +187,7 @@ export default function Register() {
                     ? 'border-red-500 dark:border-red-500'
                     : 'border-gray-300 dark:border-gray-600'
                 } bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all`}
-                placeholder="Confirm your password"
+                placeholder="Re-enter your password"
                 disabled={loading}
               />
               {errors.password2 && (

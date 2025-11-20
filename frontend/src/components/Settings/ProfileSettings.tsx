@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function ProfileSettings() {
@@ -6,8 +6,17 @@ export default function ProfileSettings() {
   const [editing, setEditing] = useState(false)
   const [username, setUsername] = useState(user?.username || '')
   const [email, setEmail] = useState(user?.email || '')
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  // Load profile photo from localStorage
+  useEffect(() => {
+    const savedPhoto = localStorage.getItem('profilePhoto')
+    if (savedPhoto) {
+      setProfilePhoto(savedPhoto)
+    }
+  }, [])
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,6 +44,41 @@ export default function ProfileSettings() {
     setMessage(null)
   }
 
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setMessage({ type: 'error', text: 'Please select an image file' })
+      return
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage({ type: 'error', text: 'Image must be less than 5MB' })
+      return
+    }
+
+    // Read file and convert to base64
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      const base64String = reader.result as string
+      setProfilePhoto(base64String)
+      localStorage.setItem('profilePhoto', base64String)
+      setMessage({ type: 'success', text: 'Profile photo updated!' })
+      setTimeout(() => setMessage(null), 3000)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleRemovePhoto = () => {
+    setProfilePhoto(null)
+    localStorage.removeItem('profilePhoto')
+    setMessage({ type: 'success', text: 'Profile photo removed' })
+    setTimeout(() => setMessage(null), 3000)
+  }
+
   return (
     <div className="space-y-6">
       {/* Profile Picture */}
@@ -43,15 +87,39 @@ export default function ProfileSettings() {
           Profile Picture
         </label>
         <div className="flex items-center gap-4">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white text-2xl font-bold">
-            {user?.username?.charAt(0).toUpperCase()}
+          {profilePhoto ? (
+            <img
+              src={profilePhoto}
+              alt="Profile"
+              className="w-20 h-20 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700"
+            />
+          ) : (
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white text-2xl font-bold">
+              {user?.username?.charAt(0).toUpperCase()}
+            </div>
+          )}
+          <div className="flex flex-col gap-2">
+            <label className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors cursor-pointer">
+              {profilePhoto ? 'Change Photo' : 'Upload Photo'}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                className="hidden"
+              />
+            </label>
+            {profilePhoto && (
+              <button
+                onClick={handleRemovePhoto}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+              >
+                Remove Photo
+              </button>
+            )}
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              JPG, PNG or GIF (max. 5MB)
+            </p>
           </div>
-          <button
-            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
-            disabled
-          >
-            Change Photo (Coming Soon)
-          </button>
         </div>
       </div>
 
